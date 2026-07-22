@@ -1,49 +1,18 @@
-const baseFoods = [
-  [1,"Nasi Lemak","Rice","1 packet",520,13,70,22,8,780,"🍛"],
-  [2,"Nasi Ayam","Rice","1 plate",600,28,74,20,5,960,"🍗"],
-  [3,"Nasi Kerabu","Rice","1 plate",560,24,72,18,6,820,"🍚"],
-  [4,"Nasi Kandar","Rice","1 plate",760,30,88,31,9,1250,"🍛"],
-  [5,"Nasi Goreng Kampung","Rice","1 plate",640,22,82,25,5,1100,"🍳"],
-  [6,"Bubur Ayam","Rice","1 bowl",370,20,50,10,3,790,"🥣"],
-  [7,"Mee Goreng Mamak","Noodles","1 plate",610,18,84,23,10,1180,"🍜"],
-  [8,"Char Kuey Teow","Noodles","1 plate",740,23,86,34,8,1300,"🥢"],
-  [9,"Laksa","Noodles","1 bowl",520,17,65,21,7,1200,"🍲"],
-  [10,"Mee Rebus","Noodles","1 bowl",510,16,78,15,12,1050,"🍜"],
-  [11,"Curry Mee","Noodles","1 bowl",590,20,68,26,7,1260,"🍜"],
-  [12,"Kuey Teow Soup","Noodles","1 bowl",390,19,57,10,4,880,"🍲"],
-  [13,"Ayam Goreng","Protein","1 piece",290,24,8,18,1,530,"🍗"],
-  [14,"Ayam Percik","Protein","1 piece",330,28,12,19,7,600,"🍗"],
-  [15,"Ikan Bakar","Protein","1 medium fish",280,34,5,13,2,420,"🐟"],
-  [16,"Satay Ayam","Protein","10 sticks",390,31,22,19,11,670,"🍢"],
-  [17,"Daging Rendang","Protein","1 serving",460,30,15,31,6,720,"🥩"],
-  [18,"Telur Dadar","Protein","1 serving",220,14,4,17,1,410,"🍳"],
-  [19,"Roti Canai","Snacks","1 piece",300,6,45,11,3,510,"🫓"],
-  [20,"Karipap","Snacks","1 piece",180,4,23,8,2,260,"🥟"],
-  [21,"Pisang Goreng","Snacks","3 pieces",290,3,46,11,17,90,"🍌"],
-  [22,"Cucur Udang","Snacks","3 pieces",320,10,38,14,3,470,"🍤"],
-  [23,"Popiah Basah","Snacks","2 rolls",240,8,38,7,8,430,"🌯"],
-  [24,"Pulut Panggang","Snacks","2 pieces",260,7,42,8,4,300,"🍙"],
-  [25,"Teh Tarik","Drinks","1 glass",190,5,33,5,27,110,"🥤"],
-  [26,"Milo Ais","Drinks","1 glass",250,7,43,6,31,140,"🧋"],
-  [27,"Kopi O Kosong","Drinks","1 cup",8,0,2,0,0,5,"☕"],
-  [28,"Air Sirap","Drinks","1 glass",140,0,36,0,35,15,"🥤"],
-  [29,"Lime Juice Less Sugar","Drinks","1 glass",85,1,22,0,17,10,"🍋"],
-  [30,"Soy Milk","Drinks","1 glass",120,7,15,4,9,90,"🥛"],
-  [31,"Cendol","Dessert","1 bowl",390,5,62,14,41,160,"🍧"],
-  [32,"Ais Kacang","Dessert","1 bowl",430,6,76,11,48,220,"🍨"],
-  [33,"Kuih Lapis","Dessert","2 pieces",210,2,39,5,18,120,"🍰"],
-  [34,"Kuih Seri Muka","Dessert","2 pieces",260,4,44,8,21,150,"🍰"],
-  [35,"Tau Fu Fah","Dessert","1 bowl",180,8,27,5,19,60,"🥣"],
-  [36,"Fresh Papaya","Dessert","1 cup",62,1,16,0,11,3,"🥭"]
-].map(x => ({id:x[0],name:x[1],category:x[2],serving:x[3],calories:x[4],protein:x[5],carbs:x[6],fat:x[7],sugar:x[8],sodium:x[9],emoji:x[10]}));
+const baseFoods = Array.isArray(window.WORLD_FOODS) ? window.WORLD_FOODS : [];
 
 const recipes = [
-  {id:1,name:"Lighter Nasi Lemak",emoji:"🍛",calories:430,time:"25 min",ingredients:["brown rice","egg","cucumber","anchovies","light sambal"],tip:"Use less coconut milk and a measured sambal portion."},
-  {id:2,name:"Air-Fried Ayam Percik",emoji:"🍗",calories:360,time:"35 min",ingredients:["chicken breast","lemongrass","turmeric","light coconut milk"],tip:"Air-fry instead of deep-frying."},
-  {id:3,name:"High-Protein Mee Soup",emoji:"🍜",calories:420,time:"20 min",ingredients:["rice noodles","chicken","bok choy","egg","clear broth"],tip:"Choose clear broth and add vegetables."},
-  {id:4,name:"Tempeh Nasi Kerabu Bowl",emoji:"🥗",calories:470,time:"30 min",ingredients:["blue rice","tempeh","herbs","cucumber","lime"],tip:"A fibre-rich vegetarian option."},
-  {id:5,name:"Ikan Bakar Salad Plate",emoji:"🐟",calories:380,time:"30 min",ingredients:["fish","ulam","tomato","lime","half rice portion"],tip:"Keep sauces on the side."},
-  {id:6,name:"Low-Sugar Cendol Cup",emoji:"🍧",calories:210,time:"15 min",ingredients:["cendol","light coconut milk","kidney beans","small gula melaka portion"],tip:"Use half the usual syrup."}
+  {id:1,name:"Mediterranean Grain Bowl",emoji:"🥗",calories:440,time:"20 min",ingredients:["quinoa","chickpeas","cucumber","tomato","hummus"],tip:"A colourful plant-forward lunch inspired by the Mediterranean."},
+  {id:2,name:"Japanese Salmon Rice Bowl",emoji:"🍣",calories:510,time:"25 min",ingredients:["salmon","rice","edamame","cucumber","sesame"],tip:"Use a measured sauce portion to manage sodium."},
+  {id:3,name:"Mexican Chicken Taco Plate",emoji:"🌮",calories:480,time:"25 min",ingredients:["corn tortillas","grilled chicken","salsa","lettuce","avocado"],tip:"Choose grilled protein and fresh salsa."},
+  {id:4,name:"Indian Lentil Dal Bowl",emoji:"🍛",calories:420,time:"30 min",ingredients:["lentils","tomato","spinach","brown rice","spices"],tip:"High in fibre and easy to prepare in batches."},
+  {id:5,name:"Korean Bibimbap Light",emoji:"🍚",calories:470,time:"30 min",ingredients:["rice","egg","spinach","carrot","mushrooms"],tip:"Add more vegetables and use less sauce."},
+  {id:6,name:"Moroccan Chickpea Tagine",emoji:"🥘",calories:430,time:"35 min",ingredients:["chickpeas","tomato","carrot","zucchini","couscous"],tip:"A warming plant-forward dinner."},
+  {id:7,name:"Greek Yogurt Breakfast Bowl",emoji:"🥣",calories:330,time:"8 min",ingredients:["Greek yogurt","berries","oats","walnuts","honey"],tip:"Use fruit for sweetness and keep honey light."},
+  {id:8,name:"Vietnamese Fresh Roll Plate",emoji:"🥬",calories:360,time:"25 min",ingredients:["rice paper","prawns","lettuce","herbs","rice noodles"],tip:"Serve dipping sauce on the side."},
+  {id:9,name:"Brazilian Black Bean Bowl",emoji:"🫘",calories:460,time:"30 min",ingredients:["black beans","rice","tomato","orange","greens"],tip:"A balanced bowl with fibre-rich beans."},
+  {id:10,name:"Malaysian Ikan Bakar Plate",emoji:"🐟",calories:390,time:"30 min",ingredients:["fish","ulam","lime","half rice portion","sambal"],tip:"Keep sambal and sweet sauces measured."},
+  {id:11,name:"Italian Tomato Pasta",emoji:"🍝",calories:450,time:"20 min",ingredients:["wholegrain pasta","tomato","garlic","olive oil","spinach"],tip:"Use vegetables to increase volume and fibre."},
+  {id:12,name:"West African Jollof Bowl",emoji:"🍲",calories:500,time:"35 min",ingredients:["rice","tomato","pepper","chicken","greens"],tip:"Pair a moderate rice portion with extra vegetables."}
 ];
 
 const defaultState = {
@@ -51,8 +20,10 @@ const defaultState = {
   favorites:[], custom:[], theme:"light", bestStreak:0, grocery:[], plan:[], lastDate:"",
   challenge:{title:"Eat vegetables twice today",progress:0,target:2}
 };
-let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiV2") || "{}"));
-let activeCategory = "all", activeMealFilter = "all", favoritesOnly = false, selectedFood = null, detectedFoods = [];
+let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV4") || "{}"));
+let activeCategory = "all", activeRegion = "all", activeCountry = "all", activeLetter = "all";
+let activeSort = "az", activeMealFilter = "all", favoritesOnly = false;
+let selectedFood = null, detectedFoods = [], externalProducts = [], visibleFoodLimit = 72;
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -64,7 +35,7 @@ function ensureToday() {
   if (state.lastDate && state.lastDate !== today) state.water = 0;
   state.lastDate = today;
 }
-function persist() { localStorage.setItem("makanaiV2", JSON.stringify(state)); }
+function persist() { localStorage.setItem("makanaiWorldV4", JSON.stringify(state)); }
 function save(message) { updateHistory(); persist(); renderAll(); if (message) toast(message); }
 function toast(message) {
   const el = $("#toast"); el.textContent = message; el.classList.add("show");
@@ -137,30 +108,141 @@ $$('#mealFilters button').forEach(b => b.addEventListener('click', () => {
 $("#addWater").addEventListener('click', () => { state.water = Math.min(state.waterGoal,state.water+1); save(); });
 $("#undoWater").addEventListener('click', () => { state.water = Math.max(0,state.water-1); save(); });
 
-function renderFoods() {
-  const term = $("#foodSearch").value.toLowerCase();
-  const list = allFoods().filter(f => (activeCategory==='all'||f.category===activeCategory) && f.name.toLowerCase().includes(term) && (!favoritesOnly || state.favorites.includes(f.id)));
-  $("#foodGrid").innerHTML = list.length ? list.map(f => `
-    <article class="food-card"><button class="fav" data-fav="${f.id}">${state.favorites.includes(f.id)?'♥':'♡'}</button><div class="emoji">${f.emoji||'🍽️'}</div><h4>${f.name}</h4><p>${f.serving} · ${f.calories} kcal<br>${f.protein}g protein · ${f.carbs}g carbs · ${f.fat}g fat<br>${f.sugar||0}g sugar · ${f.sodium||0}mg sodium</p><button class="add" data-food="${f.id}">Add to diary</button></article>
-  `).join('') : `<div class="empty">No matching food found.</div>`;
-  $$('[data-fav]').forEach(b => b.addEventListener('click', () => {
-    const id=Number(b.dataset.fav); state.favorites = state.favorites.includes(id) ? state.favorites.filter(x=>x!==id) : [...state.favorites,id]; save();
-  }));
-  $$('[data-food]').forEach(b => b.addEventListener('click', () => openFoodModal(Number(b.dataset.food))));
+function populateWorldFilters() {
+  const regions = [...new Set(baseFoods.map(f=>f.region))].sort();
+  const categories = [...new Set(baseFoods.map(f=>f.category))].sort();
+  $("#regionFilter").innerHTML = `<option value="all">All regions</option>${regions.map(x=>`<option>${x}</option>`).join("")}`;
+  $("#categoryFilter").innerHTML = `<option value="all">All categories</option>${categories.map(x=>`<option>${x}</option>`).join("")}`;
+  $("#alphabetFilters").innerHTML = `<button class="active" data-letter="all">All</button>${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(x=>`<button data-letter="${x}">${x}</button>`).join("")}`;
+  $("#worldFoodCount").textContent = baseFoods.length.toLocaleString();
+  $("#worldCountryCount").textContent = new Set(baseFoods.map(f=>f.country)).size;
+  $("#worldCategoryCount").textContent = categories.length;
+  refreshCountryOptions();
 }
-$("#foodSearch").addEventListener('input', renderFoods);
-$$('#categoryFilters button').forEach(b => b.addEventListener('click', () => {
-  activeCategory=b.dataset.category; $$('#categoryFilters button').forEach(x=>x.classList.toggle('active',x===b)); renderFoods();
-}));
-$("#favOnly").addEventListener('click', () => { favoritesOnly=!favoritesOnly; $("#favOnly").textContent=favoritesOnly?'♥ Showing favourites':'♡ Favourites'; renderFoods(); });
+function refreshCountryOptions() {
+  const countries = [...new Set(baseFoods.filter(f=>activeRegion==="all"||f.region===activeRegion).map(f=>f.country))].sort();
+  $("#countryFilter").innerHTML = `<option value="all">All countries</option>${countries.map(x=>`<option>${x}</option>`).join("")}`;
+  if (!countries.includes(activeCountry)) activeCountry = "all";
+  $("#countryFilter").value = activeCountry;
+}
+function getFilteredFoods() {
+  const term = $("#foodSearch").value.trim().toLowerCase();
+  let list = allFoods().filter(f => {
+    const searchable = `${f.name} ${f.country||""} ${f.region||""} ${f.category||""}`.toLowerCase();
+    return (!term || searchable.includes(term))
+      && (activeRegion==="all" || f.region===activeRegion)
+      && (activeCountry==="all" || f.country===activeCountry)
+      && (activeCategory==="all" || f.category===activeCategory)
+      && (activeLetter==="all" || (f.name||"").charAt(0).toUpperCase()===activeLetter)
+      && (!favoritesOnly || state.favorites.includes(f.id));
+  });
+  const sorters = {
+    az:(a,b)=>a.name.localeCompare(b.name),
+    za:(a,b)=>b.name.localeCompare(a.name),
+    "cal-low":(a,b)=>a.calories-b.calories,
+    "cal-high":(a,b)=>b.calories-a.calories,
+    protein:(a,b)=>b.protein-a.protein,
+    country:(a,b)=>(a.country||"").localeCompare(b.country||"")||a.name.localeCompare(b.name)
+  };
+  return list.sort(sorters[activeSort] || sorters.az);
+}
+function renderFoods() {
+  const list = getFilteredFoods();
+  const shown = list.slice(0, visibleFoodLimit);
+  $("#foodResultCount").textContent = `${list.length.toLocaleString()} foods match your filters`;
+  $("#visibleFoodCount").textContent = `${shown.length.toLocaleString()} shown`;
+  $("#foodLibraryTitle").textContent = activeLetter==="all" ? "All foods A–Z" : `Foods beginning with ${activeLetter}`;
+  $("#loadMoreFoods").classList.toggle("hidden", shown.length >= list.length);
+
+  let lastLetter = "";
+  $("#foodGrid").innerHTML = shown.length ? shown.map(f => {
+    const letter = (f.name||"#").charAt(0).toUpperCase();
+    const heading = activeSort==="az" && letter!==lastLetter ? `<div class="letter-divider"><span>${letter}</span><i></i></div>` : "";
+    lastLetter = letter;
+    const tags = (f.tags||[]).slice(0,2).map(t=>`<span>${t}</span>`).join("");
+    return `${heading}<article class="food-card world-card">
+      <button class="fav" data-fav="${f.id}" aria-label="Favourite">${state.favorites.includes(f.id)?'♥':'♡'}</button>
+      <div class="world-card-top"><div class="emoji">${f.emoji||'🍽️'}</div><span class="country-badge">${f.flag||'🌐'} ${f.country||'Custom'}</span></div>
+      <h4>${f.name}</h4>
+      <p class="food-category">${f.category||'Food'} · ${f.serving||'1 serving'}</p>
+      <div class="mini-nutrition"><span><b>${Math.round(f.calories)}</b> kcal</span><span><b>${Math.round(f.protein)}</b>g protein</span><span><b>${Math.round(f.carbs)}</b>g carbs</span></div>
+      <div class="tag-row compact-tags">${tags}</div>
+      <button class="add" data-food="${f.id}">View & add</button>
+    </article>`;
+  }).join("") : `<div class="empty">No food matches these filters. Try another country, letter or keyword.</div>`;
+
+  $$('[data-fav]').forEach(b => b.addEventListener('click', () => {
+    const raw=b.dataset.fav, id=raw.startsWith("ext-")?raw:Number(raw);
+    state.favorites = state.favorites.includes(id) ? state.favorites.filter(x=>x!==id) : [...state.favorites,id];
+    persist(); renderFoods();
+  }));
+  $$('[data-food]').forEach(b => b.addEventListener('click', () => {
+    const raw=b.dataset.food, id=raw.startsWith("ext-")?raw:Number(raw); openFoodModal(id);
+  }));
+}
+$("#foodSearch").addEventListener('input',()=>{visibleFoodLimit=72;renderFoods();});
+$("#regionFilter").addEventListener('change',e=>{activeRegion=e.target.value;activeCountry="all";visibleFoodLimit=72;refreshCountryOptions();renderFoods();});
+$("#countryFilter").addEventListener('change',e=>{activeCountry=e.target.value;visibleFoodLimit=72;renderFoods();});
+$("#categoryFilter").addEventListener('change',e=>{activeCategory=e.target.value;visibleFoodLimit=72;renderFoods();});
+$("#foodSort").addEventListener('change',e=>{activeSort=e.target.value;visibleFoodLimit=72;renderFoods();});
+$("#alphabetFilters").addEventListener('click',e=>{
+  const b=e.target.closest("[data-letter]"); if(!b)return;
+  activeLetter=b.dataset.letter;visibleFoodLimit=72;
+  $$("#alphabetFilters button").forEach(x=>x.classList.toggle("active",x===b));renderFoods();
+});
+$("#favOnly").addEventListener('click', () => {
+  favoritesOnly=!favoritesOnly; $("#favOnly").textContent=favoritesOnly?'♥ Showing favourites':'♡ Favourites';visibleFoodLimit=72;renderFoods();
+});
+$("#clearFoodFilters").addEventListener('click',()=>{
+  activeRegion=activeCountry=activeCategory=activeLetter="all";activeSort="az";favoritesOnly=false;visibleFoodLimit=72;
+  $("#foodSearch").value="";$("#regionFilter").value="all";refreshCountryOptions();$("#countryFilter").value="all";$("#categoryFilter").value="all";$("#foodSort").value="az";
+  $$("#alphabetFilters button").forEach(x=>x.classList.toggle("active",x.dataset.letter==="all"));$("#favOnly").textContent="♡ Favourites";renderFoods();
+});
+$("#loadMoreFoods").addEventListener('click',()=>{visibleFoodLimit+=72;renderFoods();});
+
+$("#globalProductForm").addEventListener('submit',async e=>{
+  e.preventDefault();const query=$("#globalProductQuery").value.trim();if(!query)return;
+  $("#globalProductStatus").textContent="Searching the worldwide product database…";
+  $("#globalProductResults").innerHTML="";
+  try{
+    const res=await fetch(`/api/global-products?q=${encodeURIComponent(query)}`);
+    if(!res.ok)throw new Error();
+    const data=await res.json();externalProducts=(data.products||[]).map((p,i)=>({
+      id:`ext-${Date.now()}-${i}`,name:p.name||"Unnamed product",country:p.country||"Worldwide",region:"Packaged products",flag:"📦",
+      category:p.category||"Packaged Food",serving:p.serving||"100 g",calories:Number(p.calories)||0,protein:Number(p.protein)||0,
+      carbs:Number(p.carbs)||0,fat:Number(p.fat)||0,sugar:Number(p.sugar)||0,sodium:Number(p.sodium)||0,emoji:"📦",
+      tags:[p.brand||"Open Food Facts"].filter(Boolean),source:"Open Food Facts"
+    }));
+    $("#globalProductStatus").textContent=externalProducts.length?`${externalProducts.length} products found. Nutrition may be incomplete because product data is community-contributed.`:"No products found.";
+    $("#globalProductResults").innerHTML=externalProducts.map((f,i)=>`<article class="product-result"><div><span class="country-badge">📦 ${f.country}</span><h4>${f.name}</h4><p>${f.tags[0]||"Packaged product"} · ${Math.round(f.calories)} kcal per ${f.serving}</p></div><button class="soft" data-external="${i}">Add</button></article>`).join("");
+    $$("[data-external]").forEach(b=>b.addEventListener("click",()=>{selectedFood=externalProducts[Number(b.dataset.external)];showFoodModal();}));
+  }catch{
+    $("#globalProductStatus").textContent="Online search needs the included Node server and an internet connection.";
+  }
+});
 
 function openFoodModal(id) {
-  selectedFood = allFoods().find(f=>f.id===id); if(!selectedFood) return;
-  $("#modalName").textContent=selectedFood.name; $("#modalServing").textContent=selectedFood.serving; $("#portion").value='1'; updateNutritionPreview(); $("#foodModal").classList.remove('hidden');
+  selectedFood = allFoods().find(f=>String(f.id)===String(id)) || externalProducts.find(f=>String(f.id)===String(id));
+  if(!selectedFood) return; showFoodModal();
+}
+function showFoodModal(){
+  $("#modalEmoji").textContent=selectedFood.emoji||"🍽️";
+  $("#modalOrigin").textContent=`${selectedFood.flag||"🌐"} ${selectedFood.country||"Custom"} · ${selectedFood.region||"Personal"}`;
+  $("#modalName").textContent=selectedFood.name;
+  $("#modalServing").textContent=`${selectedFood.category||"Food"} · ${selectedFood.serving||"1 serving"}`;
+  $("#modalTags").innerHTML=(selectedFood.tags||[]).map(t=>`<span>${t}</span>`).join("");
+  $("#portion").value='1';updateNutritionPreview();$("#foodModal").classList.remove('hidden');
 }
 function updateNutritionPreview() {
   if(!selectedFood) return; const p=Number($("#portion").value);
-  const values=[["Calories",Math.round(selectedFood.calories*p)],["Protein",`${Math.round(selectedFood.protein*p)}g`],["Carbs",`${Math.round(selectedFood.carbs*p)}g`],["Fat",`${Math.round(selectedFood.fat*p)}g`]];
+  const values=[
+    ["Calories",Math.round((selectedFood.calories||0)*p)],
+    ["Protein",`${Math.round((selectedFood.protein||0)*p)}g`],
+    ["Carbs",`${Math.round((selectedFood.carbs||0)*p)}g`],
+    ["Fat",`${Math.round((selectedFood.fat||0)*p)}g`],
+    ["Sugar",`${Math.round((selectedFood.sugar||0)*p)}g`],
+    ["Sodium",`${Math.round((selectedFood.sodium||0)*p)}mg`]
+  ];
   $("#nutritionPreview").innerHTML=values.map(v=>`<div><b>${v[1]}</b><span>${v[0]}</span></div>`).join('');
 }
 $("#portion").addEventListener('change',updateNutritionPreview);
@@ -175,7 +257,7 @@ $("#customBtn").addEventListener('click',()=>$("#customModal").classList.remove(
 $("#closeCustom").addEventListener('click',()=>$("#customModal").classList.add('hidden'));
 $("#customForm").addEventListener('submit',e=>{
   e.preventDefault();
-  state.custom.push({id:Date.now(),name:$("#customName").value,category:$("#customCategory").value,serving:$("#customServing").value,calories:+$("#customCalories").value,protein:+$("#customProtein").value,carbs:+$("#customCarbs").value,fat:+$("#customFat").value,sugar:0,sodium:0,emoji:'🍽️'});
+  state.custom.push({id:Date.now(),name:$("#customName").value,country:$("#customCountry").value||"Custom",region:"Personal",flag:"⭐",category:$("#customCategory").value,serving:$("#customServing").value,calories:+$("#customCalories").value,protein:+$("#customProtein").value,carbs:+$("#customCarbs").value,fat:+$("#customFat").value,sugar:0,sodium:0,emoji:'🍽️',tags:["Custom"]});
   e.target.reset(); $("#customModal").classList.add('hidden'); save("Custom food saved");
 });
 
@@ -208,7 +290,15 @@ $("#saveDetected").addEventListener('click',()=>{
   detectedFoods.forEach(d=>state.meals.push({...d.food,logId:crypto.randomUUID(),date:dayKey(),mealType:'Lunch',portion:d.portion,portionLabel:`${d.portion} portion`,calories:d.food.calories*d.portion,protein:d.food.protein*d.portion,carbs:d.food.carbs*d.portion,fat:d.food.fat*d.portion})); save("Detected meal saved"); go('home');
 });
 $("#labelDemo").addEventListener('click',()=>{$("#labelResult").classList.remove('hidden');$("#labelResult").innerHTML='<b>Extracted values</b><br>Serving: 30 g<br>Calories: 145 kcal<br>Protein: 3 g<br>Carbohydrates: 18 g<br>Fat: 7 g<br>Sugar: 6 g<br>Sodium: 210 mg';});
-$("#barcodeSearch").addEventListener('click',()=>{const code=$("#barcodeInput").value.trim();$("#barcodeResult").classList.remove('hidden');$("#barcodeResult").innerHTML=code?`<b>Demo result for ${code}</b><br>Malaysian chocolate malt drink<br>160 kcal · 18 g sugar per packet`:'Please enter a barcode number.';});
+$("#barcodeSearch").addEventListener('click',async()=>{
+  const code=$("#barcodeInput").value.trim();$("#barcodeResult").classList.remove('hidden');
+  if(!code){$("#barcodeResult").textContent="Please enter a barcode number.";return;}
+  $("#barcodeResult").textContent="Looking up barcode…";
+  try{
+    const res=await fetch(`/api/barcode/${encodeURIComponent(code)}`);if(!res.ok)throw new Error();
+    const p=await res.json();$("#barcodeResult").innerHTML=`<b>${p.name||"Product found"}</b><br>${p.brand||""}<br>${Math.round(p.calories||0)} kcal · ${Math.round(p.sugar||0)}g sugar per ${p.serving||"100 g"}`;
+  }catch{$("#barcodeResult").textContent="Barcode lookup needs the included Node server and internet connection.";}
+});
 
 function loadProfile(){const p=state.profile||{};$("#name").value=p.name||'';$("#age").value=p.age||22;$("#height").value=p.height||170;$("#weight").value=p.weight||70;$("#gender").value=p.gender||'male';$("#activity").value=p.activity||'1.55';$("#goal").value=p.goal??'0';$("#dietStyle").value=p.dietStyle||'balanced';$("#allergy").value=p.allergy||'';$("#waterGoal").value=state.waterGoal||8;}
 $("#profileForm").addEventListener('submit',e=>{
@@ -231,9 +321,9 @@ function renderInsights(t){
   const insights=[];
   if(!todaysMeals().length) insights.push(['📝','Start logging','Add at least one meal to unlock personalised insights.']);
   else {
-    if(t.protein<60) insights.push(['💪','Protein could be higher','Try ikan bakar, eggs, tempeh or grilled chicken.']);
-    if(t.sugar>50) insights.push(['🍬','Sugar is high','Sweet drinks and desserts are the main items to review.']);
-    if(t.sodium>2300) insights.push(['🧂','Sodium is high','Choose less gravy, soup and processed sauces tomorrow.']);
+    if(t.protein<60) insights.push(['💪','Protein could be higher','Try fish, eggs, lentils, tofu, yogurt or grilled chicken.']);
+    if(t.sugar>50) insights.push(['🍬','Sugar is high','Review sweet drinks, desserts and heavily sweetened packaged foods.']);
+    if(t.sodium>2300) insights.push(['🧂','Sodium is high','Choose less salty broth, processed food and heavy sauces tomorrow.']);
     if(state.water<state.waterGoal/2) insights.push(['💧','Hydration is behind','Add a few glasses before the end of the day.']);
     if(!insights.length) insights.push(['✅','Balanced day','Your logged meals are currently within the main targets.']);
   }
@@ -243,18 +333,21 @@ $("#weightForm").addEventListener('submit',e=>{e.preventDefault();state.weights.
 
 function generatePlan(){
   const style=state.profile.dietStyle||'balanced', target=state.target;
-  let candidates=baseFoods.filter(f=>f.category!=='Dessert'&&f.category!=='Drinks');
-  if(style==='high-protein') candidates=candidates.sort((a,b)=>b.protein-a.protein);
-  if(style==='lower-carb') candidates=candidates.sort((a,b)=>a.carbs-b.carbs);
-  if(style==='vegetarian') candidates=baseFoods.filter(f=>['Rice','Noodles','Snacks','Dessert'].includes(f.category)&&!/(ayam|ikan|daging|satay|udang)/i.test(f.name));
-  const breakfast=candidates.find(f=>f.calories<400)||baseFoods[18], lunch=candidates.find(f=>f.calories>400&&f.calories<650)||baseFoods[2], dinner=[...candidates].reverse().find(f=>f.calories<500)||baseFoods[14], snack=baseFoods[35];
-  state.plan=[{meal:'Breakfast',food:breakfast,portion:1},{meal:'Lunch',food:lunch,portion:1},{meal:'Dinner',food:dinner,portion:1},{meal:'Snack',food:snack,portion:1}];
-  const total=state.plan.reduce((a,x)=>a+x.food.calories*x.portion,0); if(total<target*.7) state.plan[1].portion=1.5; save("Meal plan generated");
+  let candidates=baseFoods.filter(f=>!['Desserts & Sweets','Drinks','Sauces & Condiments','Fast Food'].includes(f.category));
+  if(style==='high-protein') candidates=[...candidates].sort((a,b)=>b.protein-a.protein);
+  if(style==='lower-carb') candidates=[...candidates].sort((a,b)=>a.carbs-b.carbs);
+  if(style==='vegetarian') candidates=candidates.filter(f=>f.vegetarian||['Vegetables & Salads','Breakfast'].includes(f.category));
+  const breakfast=candidates.find(f=>f.category==='Breakfast'&&f.calories<450)||candidates.find(f=>f.calories<360)||baseFoods[0];
+  const lunch=candidates.find(f=>f.calories>430&&f.calories<620)||baseFoods[1];
+  const dinner=[...candidates].reverse().find(f=>f.calories<520)||baseFoods[2];
+  const snack=baseFoods.find(f=>f.category==='Snacks & Street Food'&&f.calories<320)||baseFoods[3];
+  state.plan=[{meal:'Breakfast',food:breakfast,portion:1},{meal:'Lunch',food:lunch,portion:1},{meal:'Dinner',food:dinner,portion:1},{meal:'Snack',food:snack,portion:.5}];
+  const total=state.plan.reduce((a,x)=>a+x.food.calories*x.portion,0);if(total<target*.7)state.plan[1].portion=1.5;save("Global meal plan generated");
 }
 function renderPlanner(){
   if(!state.plan.length) generatePlan();
   const total=state.plan.reduce((a,x)=>a+x.food.calories*x.portion,0);$("#planCalories").textContent=`${Math.round(total)} kcal`;
-  $("#mealPlan").innerHTML=state.plan.map((x,i)=>`<div class="meal"><div class="foodmeta"><div class="emoji">${x.food.emoji}</div><div><b>${x.meal}: ${x.food.name}</b><span>${x.food.serving} · ${Math.round(x.food.calories*x.portion)} kcal</span></div></div><button class="soft" data-plan-add="${i}">Log</button></div>`).join('');
+  $("#mealPlan").innerHTML=state.plan.map((x,i)=>`<div class="meal"><div class="foodmeta"><div class="emoji">${x.food.emoji}</div><div><b>${x.meal}: ${x.food.name}</b><span>${x.food.flag||"🌐"} ${x.food.country||""} · ${x.food.serving} · ${Math.round(x.food.calories*x.portion)} kcal</span></div></div><button class="soft" data-plan-add="${i}">Log</button></div>`).join('');
   $$('[data-plan-add]').forEach(b=>b.addEventListener('click',()=>{const x=state.plan[Number(b.dataset.planAdd)];state.meals.push({...x.food,logId:crypto.randomUUID(),date:dayKey(),mealType:x.meal,portion:x.portion,portionLabel:`${x.portion} portion`,calories:x.food.calories*x.portion,protein:x.food.protein*x.portion,carbs:x.food.carbs*x.portion,fat:x.food.fat*x.portion});save(`${x.meal} logged`);}));
   renderRecipes();renderGrocery();renderChallenge();
 }
@@ -273,4 +366,5 @@ let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDe
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
 
 function renderAll(){applyTheme();renderHome();renderFoods();renderPlanner();drawReports();}
+populateWorldFilters();
 ensureToday();loadProfile();updateHistory();persist();renderAll();

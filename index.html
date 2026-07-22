@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f766e"><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css"><title>MakanAI Malaysia V2</title>
+<meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World — explore, scan and track foods from around the world."><link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css"><title>MakanAI World — Global Nutrition Tracker</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>SMART MALAYSIAN NUTRITION TRACKER</small><h1>MakanAI Malaysia</h1></div>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1></div>
 <div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
 <div class="welcome"><div><span id="today"></span><h2 id="welcome">Hi, welcome back 👋</h2></div><div class="streak"><b id="streak">0</b><span>day streak</span></div></div>
-<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Start logging your meals.</p>
+<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track meals from every corner of the world.</p>
 <div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button></div></div>
 <div class="ring" id="ring"><div><b id="percent">0%</b><span>used</span></div></div></div>
 <div class="stats"><article><span>Calories</span><b id="calories">0 kcal</b></article><article><span>Protein</span><b id="protein">0 g</b></article><article><span>Carbs</span><b id="carbs">0 g</b></article><article><span>Fat</span><b id="fat">0 g</b></article></div>
@@ -27,7 +27,7 @@
 <div class="title"><div><small>AI TOOLS</small><h2>Scan your food</h2></div></div>
 <div class="chips" id="toolTabs"><button class="active" data-tool="photo">Food Photo</button><button data-tool="label">Nutrition Label</button><button data-tool="barcode">Barcode</button></div>
 <div id="photoTool" class="tool active">
-<div class="card"><div class="upload"><input id="foodImage" type="file" accept="image/*" capture="environment"><img id="preview" class="hidden"><div id="uploadText">📷<b>Take or upload a food photo</b><span>Keep the full plate visible.</span></div></div><button id="analyze" class="primary" disabled>Analyse Food</button><p class="note">Demo scanner included. Connect a secure AI backend for real recognition.</p></div>
+<div class="card"><div class="upload"><input id="foodImage" type="file" accept="image/*" capture="environment"><img id="preview" class="hidden"><div id="uploadText">📷<b>Take or upload a food photo</b><span>Keep the full plate visible.</span></div></div><button id="analyze" class="primary" disabled>Analyse Food</button><p class="note">AI-ready scanner for dishes from around the world. Confirm portions before saving.</p></div>
 <div id="scanResult" class="hidden"><div class="title"><h3>Review detected foods</h3></div><div id="detected" class="list"></div><button id="saveDetected" class="primary">Save Detected Meal</button></div>
 </div>
 <div id="labelTool" class="tool"><div class="card center"><div class="big">🧾</div><h3>Nutrition Label Scanner</h3><p>Extract serving size, calories, sugar, sodium and macros.</p><input id="labelImage" type="file" accept="image/*"><button id="labelDemo" class="soft full">Run Demo Extraction</button><div id="labelResult" class="result hidden"></div></div></div>
@@ -35,10 +35,89 @@
 </section>
 
 <section id="foods" class="page">
-<div class="title"><div><small>MALAYSIAN DATABASE</small><h2>Add a meal</h2></div><button id="customBtn" class="soft">+ Custom</button></div>
-<input id="foodSearch" class="search" placeholder="Search Malaysian food...">
-<div class="chips" id="categoryFilters"><button class="active" data-category="all">All</button><button data-category="Rice">Rice</button><button data-category="Noodles">Noodles</button><button data-category="Protein">Protein</button><button data-category="Drinks">Drinks</button><button data-category="Snacks">Snacks</button><button data-category="Dessert">Dessert</button></div>
-<div class="title compact"><h3>Food library</h3><button id="favOnly" class="link">♡ Favourites</button></div><div id="foodGrid" class="food-grid"></div>
+<div class="world-food-hero">
+  <div>
+    <span class="world-kicker">WORLD FOOD EXPLORER</span>
+    <h2>Discover food from A to Z</h2>
+    <p>Browse a curated global starter library, then search packaged products online when the server is connected.</p>
+  </div>
+  <div class="world-mini-stats">
+    <div><b id="worldFoodCount">505</b><span>foods</span></div>
+    <div><b id="worldCountryCount">75</b><span>countries</span></div>
+    <div><b id="worldCategoryCount">14</b><span>categories</span></div>
+  </div>
+</div>
+
+<div class="world-toolbar card">
+  <div class="world-search-row">
+    <div class="search-box">
+      <span>⌕</span>
+      <input id="foodSearch" class="search" placeholder="Search ramen, paella, nasi lemak, tacos...">
+    </div>
+    <button id="customBtn" class="soft">+ Custom food</button>
+  </div>
+
+  <div class="filter-grid">
+    <label>Region
+      <select id="regionFilter"><option value="all">All regions</option></select>
+    </label>
+    <label>Country
+      <select id="countryFilter"><option value="all">All countries</option></select>
+    </label>
+    <label>Category
+      <select id="categoryFilter"><option value="all">All categories</option></select>
+    </label>
+    <label>Sort
+      <select id="foodSort">
+        <option value="az">Name A–Z</option>
+        <option value="za">Name Z–A</option>
+        <option value="cal-low">Lowest calories</option>
+        <option value="cal-high">Highest calories</option>
+        <option value="protein">Highest protein</option>
+        <option value="country">Country A–Z</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="alphabet-wrap">
+    <span>Alphabet</span>
+    <div id="alphabetFilters" class="alphabet"></div>
+  </div>
+
+  <div class="result-row">
+    <span id="foodResultCount">Showing global foods</span>
+    <div>
+      <button id="favOnly" class="link">♡ Favourites</button>
+      <button id="clearFoodFilters" class="link">Reset filters</button>
+    </div>
+  </div>
+</div>
+
+<div class="card global-product-card">
+  <div class="global-product-copy">
+    <div class="globe-orb">🌍</div>
+    <div><h3>Search packaged food worldwide</h3><p>Look up products and nutrition labels using the optional Open Food Facts connection.</p></div>
+  </div>
+  <form id="globalProductForm" class="global-product-form">
+    <input id="globalProductQuery" placeholder="Example: cereal, chocolate, oat milk..." required>
+    <button class="soft">Search online</button>
+  </form>
+  <div id="globalProductStatus" class="note"></div>
+  <div id="globalProductResults" class="product-results"></div>
+  <p class="off-attribution">Packaged product data: <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> contributors, reused under ODbL.</p>
+</div>
+
+<div class="title compact">
+  <div><small>LOCAL WORLD LIBRARY</small><h3 id="foodLibraryTitle">All foods A–Z</h3></div>
+  <span id="visibleFoodCount">0 shown</span>
+</div>
+<div id="foodGrid" class="food-grid world-food-grid"></div>
+<button id="loadMoreFoods" class="soft full hidden">Load more foods</button>
+
+<div class="data-note">
+  <b>Nutrition reminder</b>
+  <p>Values are approximate starter estimates. Actual nutrition varies by recipe, brand, ingredients and portion size.</p>
+</div>
 </section>
 
 <section id="reports" class="page">
@@ -46,7 +125,17 @@
 <div class="stats reports"><article><span>Average calories</span><b id="avgCalories">0</b></article><article><span>Best streak</span><b id="bestStreak">0 days</b></article><article><span>Meals logged</span><b id="mealCount">0</b></article><article><span>Water average</span><b id="avgWater">0</b></article></div>
 <div class="card"><div class="title compact"><h3>Calories by day</h3><span>Last 7 days</span></div><canvas id="chart" width="700" height="260"></canvas></div>
 <div class="card"><div class="title compact"><h3>Macro balance</h3></div><div class="bars"><label>Protein <span id="proteinPct">0%</span><i><b id="proteinBar"></b></i></label><label>Carbohydrates <span id="carbPct">0%</span><i><b id="carbBar"></b></i></label><label>Fat <span id="fatPct">0%</span><i><b id="fatBar"></b></i></label></div></div>
+<div class="card"><div class="title compact"><h3>Smart nutrition insights</h3><span>Based on today</span></div><div id="insights"></div></div>
 <div class="card"><h3>Weight progress</h3><form id="weightForm" class="inline"><input id="weightEntry" type="number" step=".1" placeholder="Weight in kg" required><button class="soft">Save</button></form><div id="weightHistory" class="history"></div></div>
+</section>
+
+
+<section id="planner" class="page">
+<div class="title"><div><small>SMART PLANNING</small><h2>Meal planner</h2></div><button id="generatePlan" class="soft">Generate plan</button></div>
+<div class="card"><div class="title compact"><h3>Today’s suggested plan</h3><span id="planCalories">0 kcal</span></div><div id="mealPlan" class="list"></div></div>
+<div class="card"><div class="title compact"><h3>Healthy world recipes</h3><button id="newRecipes" class="link">Refresh</button></div><div id="recipeList" class="recipe-grid"></div></div>
+<div class="card"><div class="title compact"><h3>Grocery list</h3><button id="clearGrocery" class="link">Clear</button></div><form id="groceryForm" class="inline"><input id="groceryInput" placeholder="Add ingredient" required><button class="soft">Add</button></form><div id="groceryList" class="check-list"></div></div>
+<div class="card"><div class="title compact"><h3>Weekly challenge</h3></div><div id="challengeCard" class="challenge"></div></div>
 </section>
 
 <section id="profile" class="page">
@@ -57,16 +146,26 @@
 <div class="two"><label>Height (cm)<input id="height" type="number" value="170" required></label><label>Weight (kg)<input id="weight" type="number" value="70" step=".1" required></label></div>
 <label>Activity<select id="activity"><option value="1.2">Sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></label>
 <label>Goal<select id="goal"><option value="-400">Lose weight</option><option value="0" selected>Maintain weight</option><option value="300">Gain weight</option></select></label>
+<label>Diet style<select id="dietStyle"><option value="balanced">Balanced</option><option value="high-protein">High protein</option><option value="lower-carb">Lower carbohydrate</option><option value="vegetarian">Vegetarian</option></select></label>
+<label>Allergy / food warning<input id="allergy" placeholder="Example: peanuts, shellfish"></label>
 <label>Water goal<select id="waterGoal"><option value="6">6 glasses</option><option value="8" selected>8 glasses</option><option value="10">10 glasses</option><option value="12">12 glasses</option></select></label>
 <button class="primary">Save & Recalculate</button></form>
 <div class="card target"><span>Recommended daily target</span><b id="dailyTarget">2000 kcal</b><p>Estimated using the Mifflin–St Jeor equation.</p></div>
 <div class="card"><h3>Data tools</h3><button id="exportBtn" class="soft full">Export My Data</button><label class="file">Import Data<input id="importInput" type="file" accept=".json"></label><button id="clearBtn" class="danger full">Clear all app data</button></div>
 </section>
 </main>
-<nav><button class="active" data-page="home">⌂<span>Home</span></button><button data-page="scan">◉<span>Scan</span></button><button data-page="foods">＋<span>Foods</span></button><button data-page="reports">▥<span>Reports</span></button><button data-page="profile">☺<span>Profile</span></button></nav>
+<nav><button class="active" data-page="home">⌂<span>Home</span></button><button data-page="scan">◉<span>Scan</span></button><button data-page="foods">＋<span>Foods</span></button><button data-page="planner">☷<span>Plan</span></button><button data-page="reports">▥<span>Reports</span></button><button data-page="profile">☺<span>Profile</span></button></nav>
 </div>
 
-<div id="foodModal" class="modal hidden"><div class="modal-card"><button id="closeFood" class="close">×</button><h3 id="modalName"></h3><p id="modalServing"></p><label>Meal type<select id="mealType"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></label><label>Portion<select id="portion"><option value=".5">Half portion</option><option value="1" selected>1 portion</option><option value="1.5">1.5 portions</option><option value="2">2 portions</option></select></label><div id="nutritionPreview" class="nutrition"></div><button id="confirmFood" class="primary">Add to Diary</button></div></div>
-<div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Category<select id="customCategory"><option>Rice</option><option>Noodles</option><option>Protein</option><option>Drinks</option><option>Snacks</option><option>Dessert</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-<div id="toast" class="toast"></div><script src="app.js"></script>
+<div id="foodModal" class="modal hidden"><div class="modal-card food-detail-modal">
+<button id="closeFood" class="close">×</button>
+<div class="food-detail-head"><div id="modalEmoji" class="modal-emoji">🍽️</div><div><span id="modalOrigin" class="origin-pill"></span><h3 id="modalName"></h3><p id="modalServing"></p></div></div>
+<div id="modalTags" class="tag-row"></div>
+<label>Meal type<select id="mealType"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></label>
+<label>Portion<select id="portion"><option value=".5">Half portion</option><option value="1" selected>1 portion</option><option value="1.5">1.5 portions</option><option value="2">2 portions</option></select></label>
+<div id="nutritionPreview" class="nutrition nutrition-six"></div>
+<button id="confirmFood" class="primary">Add to Diary</button>
+</div></div>
+<div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
+<div id="toast" class="toast"></div><script src="world-foods.js"></script><script src="app.js"></script>
 </body></html>
