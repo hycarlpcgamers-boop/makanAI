@@ -3,16 +3,22 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World — explore, scan and track foods from around the world."><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css"><title>MakanAI World — Global Nutrition Tracker</title>
+<link rel="stylesheet" href="styles.css?v=5.1.0"><title>MakanAI World V5 — Global Food Explorer</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1></div>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V5.1</div></div>
 <div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
 <div class="welcome"><div><span id="today"></span><h2 id="welcome">Hi, welcome back 👋</h2></div><div class="streak"><b id="streak">0</b><span>day streak</span></div></div>
-<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track meals from every corner of the world.</p>
+<div class="world-home-strip">
+  <div><span>🌍</span><strong>505+</strong><small>global dishes</small></div>
+  <div><span>🏳️</span><strong>75</strong><small>countries</small></div>
+  <div><span>🔤</span><strong>A–Z</strong><small>food explorer</small></div>
+  <button data-go="foods">Explore World Foods →</button>
+</div>
+<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track meals and discover dishes from 75 countries.</p>
 <div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button></div></div>
 <div class="ring" id="ring"><div><b id="percent">0%</b><span>used</span></div></div></div>
 <div class="stats"><article><span>Calories</span><b id="calories">0 kcal</b></article><article><span>Protein</span><b id="protein">0 g</b></article><article><span>Carbs</span><b id="carbs">0 g</b></article><article><span>Fat</span><b id="fat">0 g</b></article></div>
@@ -167,5 +173,5 @@
 <button id="confirmFood" class="primary">Add to Diary</button>
 </div></div>
 <div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-<div id="toast" class="toast"></div><script src="world-foods.js"></script><script src="app.js"></script>
+<div id="toast" class="toast"></div><script src="world-foods.js?v=5.1.0"></script><script src="app.js?v=5.1.0"></script>
 </body></html>

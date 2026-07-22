@@ -20,7 +20,7 @@ const defaultState = {
   favorites:[], custom:[], theme:"light", bestStreak:0, grocery:[], plan:[], lastDate:"",
   challenge:{title:"Eat vegetables twice today",progress:0,target:2}
 };
-let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV4") || "{}"));
+let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV5") || "{}"));
 let activeCategory = "all", activeRegion = "all", activeCountry = "all", activeLetter = "all";
 let activeSort = "az", activeMealFilter = "all", favoritesOnly = false;
 let selectedFood = null, detectedFoods = [], externalProducts = [], visibleFoodLimit = 72;
@@ -35,7 +35,7 @@ function ensureToday() {
   if (state.lastDate && state.lastDate !== today) state.water = 0;
   state.lastDate = today;
 }
-function persist() { localStorage.setItem("makanaiWorldV4", JSON.stringify(state)); }
+function persist() { localStorage.setItem("makanaiWorldV5", JSON.stringify(state)); }
 function save(message) { updateHistory(); persist(); renderAll(); if (message) toast(message); }
 function toast(message) {
   const el = $("#toast"); el.textContent = message; el.classList.add("show");

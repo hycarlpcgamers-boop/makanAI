@@ -157,3 +157,10 @@ nav{width:min(1180px,100%)}
 }
 
 .off-attribution{margin:0;color:var(--muted);font-size:.72rem}.off-attribution a{color:var(--primary);font-weight:800;text-decoration:none}
+
+/* V5 WORLD EDITION — visible version and cache-safe redesign */
+.version-badge{display:inline-flex;margin-top:8px;padding:5px 9px;border-radius:999px;background:linear-gradient(135deg,#fff3c4,#ffe08a);color:#654b00;font-size:.65rem;font-weight:900;letter-spacing:.08em;box-shadow:0 6px 18px rgba(101,75,0,.12)}
+.world-home-strip{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px;align-items:stretch;margin:8px 0 16px;padding:12px;background:linear-gradient(135deg,rgba(8,127,115,.10),rgba(59,130,246,.08));border:1px solid rgba(8,127,115,.16);border-radius:22px}
+.world-home-strip>div{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-content:center;background:var(--surface);padding:11px 12px;border-radius:15px;box-shadow:var(--shadow)}
+.world-home-strip>div span{grid-row:1/3;font-size:1.45rem;align-self:center}.world-home-strip strong{font-size:1rem}.world-home-strip small{color:var(--muted);font-weight:700}.world-home-strip button{border:0;border-radius:15px;padding:0 16px;background:linear-gradient(135deg,#087f73,#0f5ea8);color:#fff;font-weight:900;white-space:nowrap}
+@media(max-width:700px){.world-home-strip{grid-template-columns:repeat(3,1fr)}.world-home-strip button{grid-column:1/4;padding:13px}.world-home-strip>div{grid-template-columns:1fr;text-align:center}.world-home-strip>div span{grid-row:auto}.world-home-strip small{font-size:.68rem}}
