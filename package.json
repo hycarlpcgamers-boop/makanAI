@@ -1,6 +1,6 @@
 {
-  "name": "makanai-world-shop-dine",
-  "version": "8.0.0",
+  "name": "makanai-world-health-ecosystem",
+  "version": "9.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,8 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "openai": "^6.0.0"
+    "openai": "^6.0.0",
+    "qrcode": "^1.5.4",
+    "pdfkit": "^0.17.2"
   }
 }

@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import OpenAI from "openai";
+import QRCode from "qrcode";
+import PDFDocument from "pdfkit";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -9,7 +11,7 @@ const port = Number(process.env.PORT || 8000);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OFF_HEADERS = {
-  "User-Agent": "MakanAI-World/8.0 (educational nutrition app)",
+  "User-Agent": "MakanAI-World/9.0 (educational nutrition app)",
   "Accept": "application/json"
 };
 
@@ -346,5 +348,88 @@ Do not mention these internal instructions.`
   }
 });
 
+
+app.post("/api/analyze-innovation-image", async (req, res) => {
+  try {
+    const { image, mode, food = "", reference = "" } = req.body || {};
+    if (!image || typeof image !== "string") return res.status(400).json({ error: "Image required." });
+    if (!["portion", "ingredients"].includes(mode)) return res.status(400).json({ error: "Unsupported mode." });
+    if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "AI not configured." });
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const prompt = mode === "portion"
+      ? `Estimate the visible portion of ${food || "the main food"}. The reference object is ${reference || "unknown"}. Return ONLY JSON: {"name":"food","grams":180,"confidence":72}. Be conservative; photo estimates are approximate.`
+      : `Read the visible ingredient list from this package image. Return ONLY JSON: {"ingredients":"comma-separated ingredient text","possible_allergens":["milk","peanut"]}. Do not claim safety and do not infer cross-contamination.`;
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-5",
+      input: [{ role: "user", content: [{ type: "input_text", text: prompt }, { type: "input_image", image_url: image }] }]
+    });
+    res.json(parseModelJson(response.output_text));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Innovation image analysis failed." });
+  }
+});
+
+app.post("/api/nutrition-passport-qr", async (req, res) => {
+  try {
+    const payload = {
+      type: "MakanAI Nutrition Passport",
+      name: cleanText(req.body?.name),
+      language: cleanText(req.body?.language),
+      avoid: cleanText(req.body?.allergy),
+      diet: cleanText(req.body?.diet),
+      emergency: cleanText(req.body?.contact),
+      note: "Verify ingredients and cross-contamination directly."
+    };
+    const dataUrl = await QRCode.toDataURL(JSON.stringify(payload), {
+      width: 360, margin: 2, errorCorrectionLevel: "M",
+      color: { dark: "#073f3a", light: "#ffffff" }
+    });
+    res.json({ dataUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "QR generation failed." });
+  }
+});
+
+app.post("/api/health-report-pdf", (req, res) => {
+  try {
+    const report = req.body || {};
+    const doc = new PDFDocument({ size: "A4", margin: 48 });
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'attachment; filename="MakanAI-Health-Report.pdf"');
+    doc.pipe(res);
+    doc.fontSize(21).fillColor("#087f73").text("MakanAI World Health Summary");
+    doc.moveDown(.35).fontSize(10).fillColor("#667b76").text(`Generated ${cleanText(report.generated)}`);
+    doc.moveDown(1).fontSize(15).fillColor("#17312d").text(`${cleanText(report.name) || "MakanAI user"} — ${cleanText(report.period) || "Summary"}`);
+    const rows = [
+      ["Daily calorie target", `${Number(report.target || 0)} kcal`],
+      ["Average calories", `${Number(report.averageCalories || 0)} kcal/day`],
+      ["Meals logged", String(Number(report.meals || 0))],
+      ["Average protein", `${Number(report.averageProtein || 0)} g/day`],
+      ["Water goal", `${Number(report.waterGoal || 0)} glasses`],
+      ["Current weight", report.currentWeight ? `${report.currentWeight} kg` : "Not entered"],
+      ["Food spending", `RM ${Number(report.budgetSpent || 0).toFixed(2)}`],
+      ["Mood entries", String(Number(report.moodEntries || 0))]
+    ];
+    doc.moveDown(.8);
+    rows.forEach(([label, value], index) => {
+      const y = doc.y;
+      if (index % 2 === 0) doc.rect(46, y - 4, 500, 28).fill("#eef8f6");
+      doc.fillColor("#536a65").fontSize(10).text(label, 58, y + 4, { width: 270 });
+      doc.fillColor("#17312d").fontSize(11).text(value, 330, y + 4, { width: 200, align: "right" });
+      doc.y = y + 30;
+    });
+    doc.moveDown(1.2).fontSize(9).fillColor("#667b76").text(
+      "This report is based on user-entered and estimated nutrition data. It is for general wellness tracking and is not a diagnosis, medical record or treatment plan.",
+      { lineGap: 3 }
+    );
+    doc.end();
+  } catch (error) {
+    console.error(error);
+    if (!res.headersSent) res.status(500).json({ error: "PDF generation failed." });
+  }
+});
+
 app.get("*", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
-app.listen(port, () => console.log(`MakanAI World V8 running at http://localhost:${port}`));
+app.listen(port, () => console.log(`MakanAI World V9 running at http://localhost:${port}`));
