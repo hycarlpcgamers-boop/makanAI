@@ -11,12 +11,46 @@ const port = Number(process.env.PORT || 8000);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OFF_HEADERS = {
-  "User-Agent": "MakanAI-World/9.0 (educational nutrition app)",
+  "User-Agent": "MakanAI-World/9.1 (educational nutrition app)",
   "Accept": "application/json"
 };
 
 app.use(express.json({ limit: "15mb" }));
 app.use(express.static(__dirname));
+
+function aiConfigured() {
+  const key = String(process.env.OPENAI_API_KEY || "").trim();
+  return key.length > 20 && key !== "your_api_key_here" && key.startsWith("sk-");
+}
+function getOpenAIClient() {
+  if (!aiConfigured()) throw new Error("OpenAI API key is not configured.");
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
+
+app.get("/api/ai-status", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.json({
+    configured: aiConfigured(),
+    mode: aiConfigured() ? "real-ai" : "demo",
+    model: process.env.OPENAI_MODEL || "gpt-5",
+    features: ["food-photo", "diet-coach", "menu", "receipt", "pantry", "portion", "ingredients"]
+  });
+});
+
+app.post("/api/ai-test", async (_req, res) => {
+  try {
+    if (!aiConfigured()) return res.status(503).json({ error: "AI is not configured." });
+    const client = getOpenAIClient();
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-5",
+      input: "Reply with exactly: MakanAI AI connection successful"
+    });
+    res.json({ ok: true, reply: String(response.output_text || "AI connected").trim(), model: process.env.OPENAI_MODEL || "gpt-5" });
+  } catch (error) {
+    console.error(error);
+    res.status(502).json({ error: "The API key or model could not be verified." });
+  }
+});
 
 function cleanText(value) {
   return Array.isArray(value) ? value.filter(Boolean).join(", ") : String(value || "").trim();
@@ -97,11 +131,11 @@ app.post("/api/analyze-food", async (req, res) => {
     if (!image || typeof image !== "string") {
       return res.status(400).json({ error: "An image is required." });
     }
-    if (!process.env.OPENAI_API_KEY) {
+    if (!aiConfigured()) {
       return res.status(503).json({ error: "AI is not configured. The frontend will use demo mode." });
     }
 
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const client = getOpenAIClient();
     const response = await client.responses.create({
       model: process.env.OPENAI_MODEL || "gpt-5",
       input: [{
@@ -153,7 +187,7 @@ app.post("/api/analyze-shop-image", async (req, res) => {
     if (!["menu", "receipt", "pantry"].includes(mode)) {
       return res.status(400).json({ error: "Unsupported analysis mode." });
     }
-    if (!process.env.OPENAI_API_KEY) {
+    if (!aiConfigured()) {
       return res.status(503).json({ error: "AI is not configured. The app will use demo mode." });
     }
 
@@ -172,7 +206,7 @@ Return ONLY valid JSON:
 Do not invent exact expiry dates. Leave expiry as an empty string unless a readable date is visible.`
     };
 
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const client = getOpenAIClient();
     const response = await client.responses.create({
       model: process.env.OPENAI_MODEL || "gpt-5",
       input: [{
@@ -304,11 +338,11 @@ app.post("/api/coach", async (req, res) => {
     if (!message || typeof message !== "string") {
       return res.status(400).json({ error: "A message is required." });
     }
-    if (!process.env.OPENAI_API_KEY) {
+    if (!aiConfigured()) {
       return res.status(503).json({ error: "AI Coach is not configured. The app will use offline coach mode." });
     }
 
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const client = getOpenAIClient();
     const response = await client.responses.create({
       model: process.env.OPENAI_MODEL || "gpt-5",
       input: [{
@@ -354,8 +388,8 @@ app.post("/api/analyze-innovation-image", async (req, res) => {
     const { image, mode, food = "", reference = "" } = req.body || {};
     if (!image || typeof image !== "string") return res.status(400).json({ error: "Image required." });
     if (!["portion", "ingredients"].includes(mode)) return res.status(400).json({ error: "Unsupported mode." });
-    if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "AI not configured." });
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    if (!aiConfigured()) return res.status(503).json({ error: "AI not configured." });
+    const client = getOpenAIClient();
     const prompt = mode === "portion"
       ? `Estimate the visible portion of ${food || "the main food"}. The reference object is ${reference || "unknown"}. Return ONLY JSON: {"name":"food","grams":180,"confidence":72}. Be conservative; photo estimates are approximate.`
       : `Read the visible ingredient list from this package image. Return ONLY JSON: {"ingredients":"comma-separated ingredient text","possible_allergens":["milk","peanut"]}. Do not claim safety and do not infer cross-contamination.`;
@@ -432,4 +466,4 @@ app.post("/api/health-report-pdf", (req, res) => {
 });
 
 app.get("*", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
-app.listen(port, () => console.log(`MakanAI World V9 running at http://localhost:${port}`));
+app.listen(port, () => console.log(`MakanAI World V9.1 Real AI running at http://localhost:${port}`));

@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World V8 — worldwide nutrition, AI food scanning, restaurant menus, grocery receipts, pantry and expiry tracking."><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=9.0.0"><title>MakanAI World V9 — Health Ecosystem</title>
+<meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World V9.1 — real AI food scanning, dietary coach, menu, receipt, pantry and ingredient analysis."><link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css?v=9.1.0"><title>MakanAI World V9.1 — Real AI Edition</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V9.0 · 24-IN-1 HEALTH ECOSYSTEM</div></div>
-<div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V9.1 · REAL AI CONNECTED</div></div>
+<div class="header-actions"><button id="aiStatusBadge" class="ai-status-badge checking" type="button"><i></i><span>AI checking</span></button><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
 <div class="welcome"><div><span id="today"></span><h2 id="welcome">Hi, welcome back 👋</h2></div><div class="streak"><b id="streak">0</b><span>day streak</span></div></div>
@@ -46,11 +46,6 @@
     <div class="level-footer"><span id="xpNext">250 XP to next level</span><div id="homeBadges" class="mini-badges"></div></div>
   </div>
   <button class="coach-mini-button" data-go="planner"><span>✨</span><b>Ask Coach</b><small id="coachTodayText">Get a meal suggestion</small></button>
-</div>
-<div class="innovation-home-card card">
-  <div class="innovation-home-icon">🚀</div>
-  <div><small>NEW · V9 INNOVATION HUB</small><h3>24 advanced health and food tools</h3><p>Voice logging, live AR, smart plate, virtual pet, travel mode, campus marketplace, allergy passport, reports and creator portal.</p></div>
-  <button class="soft" data-go="innovation">Explore all 24</button>
 </div>
 <div class="title"><div><small>HYDRATION</small><h3>Water tracker</h3></div><span id="waterText">0 / 8 glasses</span></div>
 <div class="card"><div id="waterGlasses" class="glasses"></div><div class="row"><button id="addWater" class="soft">+ 1 glass</button><button id="undoWater" class="link">Undo</button></div></div>
@@ -430,10 +425,14 @@
 <section id="more" class="page">
 <div class="title"><div><small>MORE TOOLS</small><h2>Everything in one place</h2></div></div>
 <div class="more-hero card">
-  <div><span>✨</span><div><small>WORLD EDITION V8</small><h3>One app for eating, shopping and cooking</h3><p>Open advanced tools without overcrowding the mobile navigation bar.</p></div></div>
+  <div><span>✨</span><div><small>WORLD EDITION V9.1</small><h3>One app for eating, shopping and cooking</h3><p>Open advanced tools without overcrowding the mobile navigation bar.</p></div></div>
+</div>
+<div class="ai-connection-card card">
+  <div class="ai-connection-icon">✦</div>
+  <div class="ai-connection-copy"><small>REAL AI CONNECTION</small><h3 id="aiConnectionTitle">Checking AI server…</h3><p id="aiConnectionText">The app is checking whether the secure Node.js AI server is active.</p><div class="ai-model-row"><span>Model</span><b id="aiModelName">—</b></div></div>
+  <div class="ai-connection-actions"><button id="testAiBtn" class="soft">Test AI</button><button id="openAiHelpBtn" class="link">Setup guide</button></div>
 </div>
 <div class="more-grid">
-  <button data-go="innovation"><span>🚀</span><div><b>Innovation Hub</b><small>24 advanced features: voice, AR, campus, travel, pet, reports and more</small></div><i>→</i></button>
   <button data-go="shop"><span>🛒</span><div><b>Shop & Dine</b><small>Menus, restaurants, receipts, pantry and expiry</small></div><i>→</i></button>
   <button data-go="reports"><span>📊</span><div><b>Reports</b><small>Calories, macros, achievements and progress</small></div><i>→</i></button>
   <button data-go="profile"><span>⚙️</span><div><b>Profile & Settings</b><small>Goals, preferences, reminders and data tools</small></div><i>→</i></button>
@@ -447,27 +446,6 @@
     <button data-shop-tool="finder"><span>📍</span>Find restaurant</button>
   </div>
 </div>
-</section>
-
-
-<section id="innovation" class="page">
-<div class="innovation-hero">
-  <div><span>V9 · 24-IN-1 ECOSYSTEM</span><h2>Innovation Hub</h2><p>Advanced tools for tracking, cooking, travel, campus life, social motivation, food safety and business.</p></div>
-  <div class="innovation-hero-bubbles"><i>🎙️</i><i>🥗</i><i>🐣</i><i>✈️</i><i>🎓</i></div>
-</div>
-<div class="innovation-toolbar card">
-  <input id="innovationSearch" placeholder="Search 24 features…">
-  <div id="innovationFilters" class="innovation-filters">
-    <button class="active" data-innovation-filter="all">All</button>
-    <button data-innovation-filter="scan">Scan & AI</button>
-    <button data-innovation-filter="lifestyle">Lifestyle</button>
-    <button data-innovation-filter="social">Social</button>
-    <button data-innovation-filter="travel">Travel</button>
-    <button data-innovation-filter="campus">Campus</button>
-    <button data-innovation-filter="business">Business</button>
-  </div>
-</div>
-<div id="innovationGrid" class="innovation-grid"></div>
 </section>
 
 <section id="profile" class="page">
@@ -518,13 +496,7 @@
 <button id="confirmFood" class="primary">Add to Diary</button>
 </div></div>
 <div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Water & Hydration</option><option>Juices & Smoothies</option><option>Coffee & Tea</option><option>Soft Drinks</option><option>Fruits & Berries</option><option>Chocolate & Candy</option><option>Chips & Savoury Snacks</option><option>Nuts & Seeds</option><option>Cereals & Granola</option><option>Dairy & Alternatives</option><option>Ice Cream & Frozen Desserts</option><option>Biscuits & Packaged Bakery</option><option>Everyday Staples</option><option>Vegetables & Legumes</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-
-<div id="innovationModal" class="innovation-modal hidden">
-  <div class="innovation-modal-shell">
-    <header class="innovation-modal-head"><div id="innovationModalIcon">🚀</div><div><small id="innovationModalNumber">FEATURE</small><h2 id="innovationModalTitle">Innovation</h2><p id="innovationModalSubtitle"></p></div><button id="closeInnovationModal" aria-label="Close">×</button></header>
-    <div id="innovationWorkspace" class="innovation-workspace"></div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div><script src="world-foods.js?v=9.0.0"></script><script src="everyday-foods.js?v=9.0.0"></script><script src="app.js?v=9.0.0"></script><script src="coach.js?v=9.0.0"></script><script src="shop.js?v=9.0.0"></script><script src="mega.js?v=9.0.0"></script>
+<div id="toast" class="toast"></div><script src="world-foods.js?v=9.1.0"></script><script src="everyday-foods.js?v=9.1.0"></script><script src="app.js?v=9.1.0"></script><script src="coach.js?v=9.1.0"></script><script src="shop.js?v=9.1.0"></script><script src="mega.js?v=9.1.0"></script>
+<div id="aiHelpModal" class="modal hidden"><div class="modal-card ai-help-modal"><button id="closeAiHelpBtn" class="close">×</button><div class="ai-help-head"><span>✦</span><div><small>SECURE AI SETUP</small><h3>Connect MakanAI to real AI</h3></div></div><ol><li>Install Node.js LTS if it is not already installed.</li><li>Double-click <code>SETUP-AI-WINDOWS.bat</code>.</li><li>Paste your own OpenAI API key into the hidden prompt.</li><li>Let the setup install packages and start the AI server.</li></ol><div class="ai-security-note"><b>Keep the key private.</b><span>It is saved only inside the local <code>.env</code> file and is never placed in browser JavaScript.</span></div><p>After setup, use <code>START-MAKANAI-WINDOWS.bat</code>. It will automatically choose AI mode.</p></div></div>
+<script src="ai-status.js?v=9.1.0"></script>
 </body></html>

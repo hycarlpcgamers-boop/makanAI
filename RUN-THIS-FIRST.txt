@@ -1,0 +1,37 @@
+MAKANAI WORLD V9.1 — REAL AI EDITION
+====================================
+
+FIRST-TIME AI SETUP
+-------------------
+1. Extract the ZIP fully. Do not run it inside the ZIP preview.
+2. Open the extracted MakanAI-World-V9-AI folder.
+3. Double-click OPEN-OPENAI-API-KEYS.bat to create your own API key.
+4. Double-click SETUP-AI-WINDOWS.bat.
+5. Paste the key into the hidden prompt.
+6. Wait for Node.js packages to install and the browser to open.
+7. The app header should show a green “AI connected” badge.
+
+EVERYDAY USE
+------------
+Double-click START-MAKANAI-WINDOWS.bat.
+
+The launcher automatically selects:
+- REAL AI mode when Node.js and the local .env key are ready.
+- Demo mode when AI has not been configured.
+
+KEEP THE SERVER OPEN
+--------------------
+Real AI requires the Node.js server window to remain open.
+The address is normally http://127.0.0.1:8000/.
+If port 8000 is busy, the launcher tries ports 8001–8020.
+
+SECURITY
+--------
+- Never send your API key in chat or screenshots.
+- Never upload the .env file.
+- Never put the key inside browser JavaScript.
+- API usage may require credits or billing on your API account.
+
+HELP
+----
+Read AI-SETUP-GUIDE.txt for full troubleshooting.

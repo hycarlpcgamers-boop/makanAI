@@ -1,5 +1,11 @@
 @echo off
-title MakanAI World V9 Health Ecosystem
-start "" http://localhost:8000
-python -m http.server 8000
-pause
+setlocal
+cd /d "%~dp0"
+title MakanAI World V9.1 Launcher
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0START-MAKANAI.ps1"
+if errorlevel 1 (
+  echo.
+  echo MakanAI did not start. Read AI-SETUP-GUIDE.txt.
+  pause
+)
+endlocal

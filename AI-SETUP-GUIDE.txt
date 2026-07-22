@@ -1,0 +1,44 @@
+MAKANAI WORLD V9.1 — REAL AI SETUP
+==================================
+
+IMPORTANT
+- Do not send your OpenAI API key to anyone.
+- Do not paste the key in app.js, coach.js, shop.js or mega.js.
+- The included setup saves it locally in the hidden server file named .env.
+- OpenAI API usage may require billing/credits on your OpenAI API account.
+
+FIRST-TIME AI SETUP
+1. Extract the ZIP fully.
+2. Open the extracted MakanAI-World-V9-AI folder.
+3. Double-click SETUP-AI-WINDOWS.bat.
+4. If Node.js is missing, allow the script to install Node.js LTS, or install it manually.
+5. Double-click OPEN-OPENAI-API-KEYS.bat and create your own API key in the OpenAI Platform dashboard.
+6. Paste the key when the setup asks. The typed key is hidden.
+7. Press Enter to use the default model, gpt-5.
+8. Wait for npm install to finish.
+9. The browser opens automatically.
+
+EVERYDAY USE
+Double-click START-MAKANAI-WINDOWS.bat.
+The launcher automatically chooses:
+- REAL AI mode when Node.js and .env are ready.
+- Demo mode when AI has not been configured.
+
+HOW TO CHECK
+The app header should show a green “AI connected” badge.
+Go to More > Real AI Connection > Test AI.
+
+AI FEATURES
+- Food photo recognition
+- Dietary Coach chat
+- Restaurant menu analysis
+- Grocery receipt extraction
+- Fridge and pantry recognition
+- Portion estimation
+- Ingredient and allergen keyword extraction
+
+TROUBLESHOOTING
+- “Demo mode”: run SETUP-AI-WINDOWS.bat.
+- “AI unavailable”: check your API key, API billing/credits and model access.
+- Port 8000 busy: the launcher automatically tries ports 8001–8020.
+- Keep the Node.js server window open while using AI.

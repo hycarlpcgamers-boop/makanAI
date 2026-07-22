@@ -1,11 +1,11 @@
 {
-  "name": "MakanAI World V9 Health Ecosystem",
-  "short_name": "MakanAI V9",
+  "name": "MakanAI World V9.1 Real AI Edition",
+  "short_name": "MakanAI AI",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f7f6",
   "theme_color": "#087f73",
-  "description": "Worldwide nutrition app with 24 advanced modules including voice logging, AR food scan, smart plate, travel, campus, allergy passport, virtual pet, PDF reports and creator portal.",
+  "description": "Worldwide nutrition tracker with secure real AI food, menu, receipt, pantry, ingredient and dietary-coach analysis.",
   "icons": [
     {
       "src": "icon-192.png",
