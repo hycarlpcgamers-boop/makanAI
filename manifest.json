@@ -1,11 +1,11 @@
 {
-  "name": "MakanAI Malaysia",
+  "name": "MakanAI Malaysia Advanced",
   "short_name": "MakanAI",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f5f7f4",
   "theme_color": "#0f766e",
-  "description": "Malaysian food calorie tracker and AI food scanner prototype.",
+  "description": "Advanced Malaysian nutrition, meal planning and AI food scanning app.",
   "icons": [
     {
       "src": "icon-192.png",
