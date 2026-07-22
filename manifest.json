@@ -1,11 +1,11 @@
 {
-  "name": "MakanAI World V6 Complete Food Library",
+  "name": "MakanAI World V7 AI Diet Coach",
   "short_name": "MakanAI World",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f7f6",
   "theme_color": "#087f73",
-  "description": "Worldwide nutrition tracker with dishes, fruits, water, drinks, snacks, chocolate and phone-camera barcode scanning.",
+  "description": "Worldwide nutrition tracker with AI diet coach, 7-day budget meal plans, food scanning, barcode camera, reminders and gamification.",
   "icons": [
     {
       "src": "icon-192.png",

@@ -24,7 +24,7 @@ const defaultState = {
   favorites:[], custom:[], theme:"light", bestStreak:0, grocery:[], plan:[], lastDate:"",
   challenge:{title:"Eat vegetables twice today",progress:0,target:2}
 };
-let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV6") || localStorage.getItem("makanaiWorldV5") || "{}"));
+let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV7") || localStorage.getItem("makanaiWorldV6") || localStorage.getItem("makanaiWorldV5") || "{}"));
 let activeCategory = "all", activeRegion = "all", activeCountry = "all", activeLetter = "all";
 let activeSort = "az", activeMealFilter = "all", favoritesOnly = false;
 let selectedFood = null, detectedFoods = [], externalProducts = [], visibleFoodLimit = 72;
@@ -485,7 +485,6 @@ function generatePlan(){
   const total=state.plan.reduce((a,x)=>a+x.food.calories*x.portion,0);if(total<target*.7)state.plan[1].portion=1.5;save("Global meal plan generated");
 }
 function renderPlanner(){
-  if(!state.plan.length) generatePlan();
   const total=state.plan.reduce((a,x)=>a+x.food.calories*x.portion,0);$("#planCalories").textContent=`${Math.round(total)} kcal`;
   $("#mealPlan").innerHTML=state.plan.map((x,i)=>`<div class="meal"><div class="foodmeta"><div class="emoji">${x.food.emoji}</div><div><b>${x.meal}: ${x.food.name}</b><span>${x.food.flag||"🌐"} ${x.food.country||""} · ${x.food.serving} · ${Math.round(x.food.calories*x.portion)} kcal</span></div></div><button class="soft" data-plan-add="${i}">Log</button></div>`).join('');
   $$('[data-plan-add]').forEach(b=>b.addEventListener('click',()=>{const x=state.plan[Number(b.dataset.planAdd)];state.meals.push({...x.food,logId:crypto.randomUUID(),date:dayKey(),mealType:x.meal,portion:x.portion,portionLabel:`${x.portion} portion`,calories:x.food.calories*x.portion,protein:x.food.protein*x.portion,carbs:x.food.carbs*x.portion,fat:x.food.fat*x.portion});save(`${x.meal} logged`);}));

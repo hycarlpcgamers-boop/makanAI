@@ -1,6 +1,6 @@
 {
-  "name": "makanai-world",
-  "version": "4.0.0",
+  "name": "makanai-world-ai-coach",
+  "version": "7.0.0",
   "private": true,
   "type": "module",
   "scripts": {

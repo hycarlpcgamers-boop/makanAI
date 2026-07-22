@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World — explore, scan and track foods from around the world."><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=6.0.0"><title>MakanAI World V6 — Global Food Explorer</title>
+<link rel="stylesheet" href="styles.css?v=7.0.0"><title>MakanAI World V7 — AI Diet Coach</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V6.0 · COMPLETE FOOD LIBRARY</div></div>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V7.0 · AI COACH & GAMIFICATION</div></div>
 <div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
@@ -19,9 +19,18 @@
   <button data-go="foods">Explore World Foods →</button>
 </div>
 <div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track complete meals, fruits, drinks, chocolate, snacks and packaged products.</p>
-<div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button></div></div>
+<div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button><button data-go="planner">Ask AI Coach</button></div></div>
 <div class="ring" id="ring"><div><b id="percent">0%</b><span>used</span></div></div></div>
 <div class="stats"><article><span>Calories</span><b id="calories">0 kcal</b></article><article><span>Protein</span><b id="protein">0 g</b></article><article><span>Carbs</span><b id="carbs">0 g</b></article><article><span>Fat</span><b id="fat">0 g</b></article></div>
+<div class="game-card card">
+  <div class="level-orb"><span>LEVEL</span><b id="userLevel">1</b></div>
+  <div class="level-copy">
+    <div class="level-title"><div><small>HEALTH JOURNEY</small><h3><span id="userXP">0</span> XP collected</h3></div><span class="coin-chip">🪙 <b id="userCoins">0</b></span></div>
+    <div class="xp-track"><i id="xpBar"></i></div>
+    <div class="level-footer"><span id="xpNext">250 XP to next level</span><div id="homeBadges" class="mini-badges"></div></div>
+  </div>
+  <button class="coach-mini-button" data-go="planner"><span>✨</span><b>Ask Coach</b><small id="coachTodayText">Get a meal suggestion</small></button>
+</div>
 <div class="title"><div><small>HYDRATION</small><h3>Water tracker</h3></div><span id="waterText">0 / 8 glasses</span></div>
 <div class="card"><div id="waterGlasses" class="glasses"></div><div class="row"><button id="addWater" class="soft">+ 1 glass</button><button id="undoWater" class="link">Undo</button></div></div>
 <div class="title"><div><small>MEAL DIARY</small><h3>Today’s meals</h3></div><button class="link" data-go="foods">+ Add food</button></div>
@@ -168,35 +177,102 @@
 <div class="card"><div class="title compact"><h3>Calories by day</h3><span>Last 7 days</span></div><canvas id="chart" width="700" height="260"></canvas></div>
 <div class="card"><div class="title compact"><h3>Macro balance</h3></div><div class="bars"><label>Protein <span id="proteinPct">0%</span><i><b id="proteinBar"></b></i></label><label>Carbohydrates <span id="carbPct">0%</span><i><b id="carbBar"></b></i></label><label>Fat <span id="fatPct">0%</span><i><b id="fatBar"></b></i></label></div></div>
 <div class="card"><div class="title compact"><h3>Smart nutrition insights</h3><span>Based on today</span></div><div id="insights"></div></div>
+<div class="card achievement-card">
+  <div class="title compact"><div><small>GAMIFICATION</small><h3>Achievements & rewards</h3></div><span id="badgeCount">0 unlocked</span></div>
+  <div id="badgeGrid" class="badge-grid"></div>
+</div>
+<div class="card leaderboard-card">
+  <div class="title compact"><div><small>FRIEND CHALLENGE</small><h3>Weekly leaderboard</h3></div><span>On-device demo</span></div>
+  <div id="leaderboard" class="leaderboard"></div>
+  <form id="friendForm" class="inline friend-form"><input id="friendName" placeholder="Add friend name" required><input id="friendXP" type="number" min="0" placeholder="XP" required><button class="soft">Add</button></form>
+</div>
 <div class="card"><h3>Weight progress</h3><form id="weightForm" class="inline"><input id="weightEntry" type="number" step=".1" placeholder="Weight in kg" required><button class="soft">Save</button></form><div id="weightHistory" class="history"></div></div>
 </section>
 
 
 <section id="planner" class="page">
-<div class="title"><div><small>SMART PLANNING</small><h2>Meal planner</h2></div><button id="generatePlan" class="soft">Generate plan</button></div>
-<div class="card"><div class="title compact"><h3>Today’s suggested plan</h3><span id="planCalories">0 kcal</span></div><div id="mealPlan" class="list"></div></div>
+<div class="title coach-page-title">
+  <div><small>PERSONAL AI NUTRITION ASSISTANT</small><h2>MakanAI Coach & Smart Plan</h2></div>
+  <div class="planner-head-actions"><button id="generatePlan" class="hidden" tabindex="-1"></button><button id="generateWeekPlan" class="soft">Generate 7-day plan</button></div>
+</div>
+
+<div class="coach-layout">
+  <div class="card coach-card">
+    <div class="coach-head">
+      <div class="coach-avatar">✨</div>
+      <div><span class="online-dot">ONLINE</span><h3>MakanAI Coach</h3><p>Personal suggestions using your goals, remaining calories, budget and food preferences.</p></div>
+    </div>
+    <div id="coachMessages" class="coach-messages"></div>
+    <div class="coach-prompts">
+      <button data-coach-prompt="What can I eat now?">What can I eat now?</button>
+      <button data-coach-prompt="Suggest a cheap dinner">Cheap dinner</button>
+      <button data-coach-prompt="Swap my last meal">Healthier swap</button>
+      <button data-coach-prompt="How am I doing today?">Daily check</button>
+    </div>
+    <form id="coachForm" class="coach-form">
+      <input id="coachInput" placeholder="Ask about food, calories, budget or meal choices…" autocomplete="off" required>
+      <button>Send</button>
+    </form>
+    <p class="medical-note">General wellness guidance only. For allergies or diagnosed medical conditions, confirm meal plans with a qualified dietitian or clinician.</p>
+  </div>
+
+  <div id="coachProfileSummary" class="card coach-summary"></div>
+</div>
+
+<div class="card weekly-plan-card">
+  <div class="title compact">
+    <div><small>SMART MEAL PLAN</small><h3>Your personalised 7-day plan</h3></div>
+    <span id="planCalories">0 kcal</span>
+  </div>
+  <div class="week-action-row">
+    <button id="logTodayPlan" class="soft">Log today’s plan</button>
+    <button id="addWeekGrocery" class="soft">Add week to groceries</button>
+    <span id="weekBudgetStatus" class="budget-status"></span>
+  </div>
+  <div id="mealPlan" class="week-plan-grid"></div>
+</div>
+
 <div class="card"><div class="title compact"><h3>Healthy world recipes</h3><button id="newRecipes" class="link">Refresh</button></div><div id="recipeList" class="recipe-grid"></div></div>
-<div class="card"><div class="title compact"><h3>Grocery list</h3><button id="clearGrocery" class="link">Clear</button></div><form id="groceryForm" class="inline"><input id="groceryInput" placeholder="Add ingredient" required><button class="soft">Add</button></form><div id="groceryList" class="check-list"></div></div>
-<div class="card"><div class="title compact"><h3>Weekly challenge</h3></div><div id="challengeCard" class="challenge"></div></div>
+<div class="card"><div class="title compact"><h3>Automatic grocery list</h3><button id="clearGrocery" class="link">Clear</button></div><form id="groceryForm" class="inline"><input id="groceryInput" placeholder="Add ingredient" required><button class="soft">Add</button></form><div id="groceryList" class="check-list"></div></div>
+<div class="card challenge-card"><div class="title compact"><div><small>XP CHALLENGE</small><h3>Weekly health challenge</h3></div><button id="newChallenge" class="link">New challenge</button></div><div id="challengeCard" class="challenge"></div></div>
 </section>
 
 <section id="profile" class="page">
 <div class="title"><div><small>PERSONAL SETTINGS</small><h2>Your health profile</h2></div></div>
 <form id="profileForm" class="card form">
+<div class="form-section-title"><span>1</span><div><b>Body & goal</b><small>Used to estimate your daily energy target</small></div></div>
 <label>Name<input id="name" placeholder="Your name"></label>
-<div class="two"><label>Age<input id="age" type="number" value="22" required></label><label>Gender<select id="gender"><option value="male">Male</option><option value="female">Female</option></select></label></div>
-<div class="two"><label>Height (cm)<input id="height" type="number" value="170" required></label><label>Weight (kg)<input id="weight" type="number" value="70" step=".1" required></label></div>
+<div class="two"><label>Age<input id="age" type="number" min="13" max="100" value="22" required></label><label>Gender<select id="gender"><option value="male">Male</option><option value="female">Female</option></select></label></div>
+<div class="two"><label>Height (cm)<input id="height" type="number" min="120" max="230" value="170" required></label><label>Weight (kg)<input id="weight" type="number" min="35" max="250" value="70" step=".1" required></label></div>
 <label>Activity<select id="activity"><option value="1.2">Sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></label>
 <label>Goal<select id="goal"><option value="-400">Lose weight</option><option value="0" selected>Maintain weight</option><option value="300">Gain weight</option></select></label>
-<label>Diet style<select id="dietStyle"><option value="balanced">Balanced</option><option value="high-protein">High protein</option><option value="lower-carb">Lower carbohydrate</option><option value="vegetarian">Vegetarian</option></select></label>
-<label>Allergy / food warning<input id="allergy" placeholder="Example: peanuts, shellfish"></label>
+
+<div class="form-section-title"><span>2</span><div><b>Food preferences</b><small>Personalises coach suggestions and meal plans</small></div></div>
+<div class="two"><label>Country / location<input id="profileCountry" placeholder="Example: Malaysia"></label><label>Daily food budget (RM)<input id="dailyBudget" type="number" min="0" step=".50" value="30"></label></div>
+<label>Preferred cuisines<input id="preferredCuisine" placeholder="Example: Malaysian, Japanese, Korean"></label>
+<label>Diet style<select id="dietStyle"><option value="balanced">Balanced</option><option value="high-protein">High protein</option><option value="lower-carb">Lower carbohydrate</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="halal">Halal-friendly</option></select></label>
+<label>Allergy / food warning<input id="allergy" placeholder="Example: peanuts, shellfish, dairy"></label>
+<label>Foods you dislike<input id="dislikedFoods" placeholder="Example: mushrooms, olives"></label>
+<label>Health focus<select id="healthFocus"><option value="general">General wellness</option><option value="lower-sugar">Lower sugar preference</option><option value="lower-sodium">Lower sodium preference</option><option value="higher-protein">Higher protein preference</option><option value="higher-fibre">Higher fibre preference</option></select></label>
+<label>Health notes for the coach<textarea id="healthNotes" rows="3" placeholder="Optional notes or dietary instructions. Do not rely on the app for medical treatment."></textarea></label>
 <label>Water goal<select id="waterGoal"><option value="6">6 glasses</option><option value="8" selected>8 glasses</option><option value="10">10 glasses</option><option value="12">12 glasses</option></select></label>
 <button class="primary">Save & Recalculate</button></form>
 <div class="card target"><span>Recommended daily target</span><b id="dailyTarget">2000 kcal</b><p>Estimated using the Mifflin–St Jeor equation.</p></div>
+<div class="card reminder-card">
+  <div class="title compact"><div><small>SMART REMINDERS</small><h3>Meal & water notifications</h3></div><span id="reminderStatus">Off</span></div>
+  <div class="reminder-grid">
+    <label>Breakfast<input id="breakfastReminder" type="time" value="08:00"></label>
+    <label>Lunch<input id="lunchReminder" type="time" value="13:00"></label>
+    <label>Dinner<input id="dinnerReminder" type="time" value="19:00"></label>
+    <label class="toggle-label"><input id="waterReminder" type="checkbox" checked><span>Water reminder</span></label>
+  </div>
+  <div class="row reminder-actions"><button id="enableReminders" class="soft">Enable notifications</button><button id="testReminder" class="link">Send test</button></div>
+  <p class="note">Browser reminders work while the app is open. Installed-app background delivery depends on browser support.</p>
+</div>
 <div class="card"><h3>Data tools</h3><button id="exportBtn" class="soft full">Export My Data</button><label class="file">Import Data<input id="importInput" type="file" accept=".json"></label><button id="clearBtn" class="danger full">Clear all app data</button></div>
 </section>
 </main>
-<nav><button class="active" data-page="home">⌂<span>Home</span></button><button data-page="scan">◉<span>Scan</span></button><button data-page="foods">＋<span>Foods</span></button><button data-page="planner">☷<span>Plan</span></button><button data-page="reports">▥<span>Reports</span></button><button data-page="profile">☺<span>Profile</span></button></nav>
+<nav><button class="active" data-page="home">⌂<span>Home</span></button><button data-page="scan">◉<span>Scan</span></button><button data-page="foods">＋<span>Foods</span></button><button data-page="planner">✨<span>Coach</span></button><button data-page="reports">▥<span>Reports</span></button><button data-page="profile">☺<span>Profile</span></button></nav>
 </div>
 
 <div id="foodModal" class="modal hidden"><div class="modal-card food-detail-modal">
@@ -209,5 +285,5 @@
 <button id="confirmFood" class="primary">Add to Diary</button>
 </div></div>
 <div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Water & Hydration</option><option>Juices & Smoothies</option><option>Coffee & Tea</option><option>Soft Drinks</option><option>Fruits & Berries</option><option>Chocolate & Candy</option><option>Chips & Savoury Snacks</option><option>Nuts & Seeds</option><option>Cereals & Granola</option><option>Dairy & Alternatives</option><option>Ice Cream & Frozen Desserts</option><option>Biscuits & Packaged Bakery</option><option>Everyday Staples</option><option>Vegetables & Legumes</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-<div id="toast" class="toast"></div><script src="world-foods.js?v=6.0.0"></script><script src="everyday-foods.js?v=6.0.0"></script><script src="app.js?v=6.0.0"></script>
+<div id="toast" class="toast"></div><script src="world-foods.js?v=7.0.0"></script><script src="everyday-foods.js?v=7.0.0"></script><script src="app.js?v=7.0.0"></script><script src="coach.js?v=7.0.0"></script>
 </body></html>
