@@ -1,4 +1,8 @@
-const baseFoods = Array.isArray(window.WORLD_FOODS) ? window.WORLD_FOODS : [];
+const worldFoods = Array.isArray(window.WORLD_FOODS) ? window.WORLD_FOODS : [];
+const everydayFoods = Array.isArray(window.EVERYDAY_FOODS) ? window.EVERYDAY_FOODS : [];
+const baseFoods = [...worldFoods, ...everydayFoods].filter((food, index, all) =>
+  index === all.findIndex(item => String(item.name).toLowerCase() === String(food.name).toLowerCase())
+);
 
 const recipes = [
   {id:1,name:"Mediterranean Grain Bowl",emoji:"🥗",calories:440,time:"20 min",ingredients:["quinoa","chickpeas","cucumber","tomato","hummus"],tip:"A colourful plant-forward lunch inspired by the Mediterranean."},
@@ -20,7 +24,7 @@ const defaultState = {
   favorites:[], custom:[], theme:"light", bestStreak:0, grocery:[], plan:[], lastDate:"",
   challenge:{title:"Eat vegetables twice today",progress:0,target:2}
 };
-let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV5") || "{}"));
+let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem("makanaiWorldV6") || localStorage.getItem("makanaiWorldV5") || "{}"));
 let activeCategory = "all", activeRegion = "all", activeCountry = "all", activeLetter = "all";
 let activeSort = "az", activeMealFilter = "all", favoritesOnly = false;
 let selectedFood = null, detectedFoods = [], externalProducts = [], visibleFoodLimit = 72;
@@ -35,17 +39,30 @@ function ensureToday() {
   if (state.lastDate && state.lastDate !== today) state.water = 0;
   state.lastDate = today;
 }
-function persist() { localStorage.setItem("makanaiWorldV5", JSON.stringify(state)); }
+function persist() { localStorage.setItem("makanaiWorldV6", JSON.stringify(state)); }
 function save(message) { updateHistory(); persist(); renderAll(); if (message) toast(message); }
 function toast(message) {
   const el = $("#toast"); el.textContent = message; el.classList.add("show");
   clearTimeout(window.toastTimer); window.toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
 }
+function animatePage(page) {
+  const section = document.getElementById(page);
+  if (!section) return;
+  section.classList.remove("page-enter");
+  void section.offsetWidth;
+  section.classList.add("page-enter");
+  const items = section.querySelectorAll(":scope > *, .card, .world-card, .stat-card, .recipe, .insight");
+  items.forEach((item, index) => {
+    item.style.setProperty("--reveal-delay", `${Math.min(index, 12) * 45}ms`);
+  });
+}
 function go(page) {
+  stopBarcodeCamera();
   $$(".page").forEach(x => x.classList.toggle("active", x.id === page));
   $$("nav button").forEach(x => x.classList.toggle("active", x.dataset.page === page));
   if (page === "reports") drawReports();
   if (page === "planner") renderPlanner();
+  animatePage(page);
   window.scrollTo({top:0, behavior:"smooth"});
 }
 $$('nav button').forEach(b => b.addEventListener('click', () => go(b.dataset.page)));
@@ -115,6 +132,8 @@ function populateWorldFilters() {
   $("#categoryFilter").innerHTML = `<option value="all">All categories</option>${categories.map(x=>`<option>${x}</option>`).join("")}`;
   $("#alphabetFilters").innerHTML = `<button class="active" data-letter="all">All</button>${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(x=>`<button data-letter="${x}">${x}</button>`).join("")}`;
   $("#worldFoodCount").textContent = baseFoods.length.toLocaleString();
+  if ($("#homeFoodCount")) $("#homeFoodCount").textContent = `${baseFoods.length.toLocaleString()}+`;
+  if ($("#homeCountryCount")) $("#homeCountryCount").textContent = `${new Set(baseFoods.map(f=>f.country)).size}+`;
   $("#worldCountryCount").textContent = new Set(baseFoods.map(f=>f.country)).size;
   $("#worldCategoryCount").textContent = categories.length;
   refreshCountryOptions();
@@ -199,6 +218,19 @@ $("#clearFoodFilters").addEventListener('click',()=>{
   $$("#alphabetFilters button").forEach(x=>x.classList.toggle("active",x.dataset.letter==="all"));$("#favOnly").textContent="♡ Favourites";renderFoods();
 });
 $("#loadMoreFoods").addEventListener('click',()=>{visibleFoodLimit+=72;renderFoods();});
+$$('[data-quick-category]').forEach(button => button.addEventListener('click', () => {
+  activeCategory = button.dataset.quickCategory;
+  activeRegion = activeCountry = activeLetter = "all";
+  visibleFoodLimit = 72;
+  $("#foodSearch").value = "";
+  $("#regionFilter").value = "all";
+  refreshCountryOptions();
+  $("#countryFilter").value = "all";
+  $("#categoryFilter").value = activeCategory;
+  $$("#alphabetFilters button").forEach(x => x.classList.toggle("active", x.dataset.letter === "all"));
+  renderFoods();
+  document.getElementById("foodLibraryTitle").scrollIntoView({behavior:"smooth",block:"start"});
+}));
 
 $("#globalProductForm").addEventListener('submit',async e=>{
   e.preventDefault();const query=$("#globalProductQuery").value.trim();if(!query)return;
@@ -290,14 +322,122 @@ $("#saveDetected").addEventListener('click',()=>{
   detectedFoods.forEach(d=>state.meals.push({...d.food,logId:crypto.randomUUID(),date:dayKey(),mealType:'Lunch',portion:d.portion,portionLabel:`${d.portion} portion`,calories:d.food.calories*d.portion,protein:d.food.protein*d.portion,carbs:d.food.carbs*d.portion,fat:d.food.fat*d.portion})); save("Detected meal saved"); go('home');
 });
 $("#labelDemo").addEventListener('click',()=>{$("#labelResult").classList.remove('hidden');$("#labelResult").innerHTML='<b>Extracted values</b><br>Serving: 30 g<br>Calories: 145 kcal<br>Protein: 3 g<br>Carbohydrates: 18 g<br>Fat: 7 g<br>Sugar: 6 g<br>Sodium: 210 mg';});
-$("#barcodeSearch").addEventListener('click',async()=>{
-  const code=$("#barcodeInput").value.trim();$("#barcodeResult").classList.remove('hidden');
-  if(!code){$("#barcodeResult").textContent="Please enter a barcode number.";return;}
-  $("#barcodeResult").textContent="Looking up barcode…";
-  try{
-    const res=await fetch(`/api/barcode/${encodeURIComponent(code)}`);if(!res.ok)throw new Error();
-    const p=await res.json();$("#barcodeResult").innerHTML=`<b>${p.name||"Product found"}</b><br>${p.brand||""}<br>${Math.round(p.calories||0)} kcal · ${Math.round(p.sugar||0)}g sugar per ${p.serving||"100 g"}`;
-  }catch{$("#barcodeResult").textContent="Barcode lookup needs the included Node server and internet connection.";}
+let barcodeStream = null;
+let barcodeFrame = 0;
+let barcodeDetector = null;
+let barcodeBusy = false;
+
+async function lookupBarcode(code) {
+  code = String(code || "").replace(/\D/g, "");
+  const result = $("#barcodeResult");
+  result.classList.remove("hidden");
+  if (!code) { result.textContent = "Please scan or enter a barcode number."; return; }
+  $("#barcodeInput").value = code;
+  result.innerHTML = `<div class="lookup-loading"><span></span>Looking up ${code}…</div>`;
+  try {
+    const res = await fetch(`/api/barcode/${encodeURIComponent(code)}`);
+    if (!res.ok) throw new Error();
+    const p = await res.json();
+    result.innerHTML = `<div class="barcode-product"><div class="barcode-product-icon">📦</div><div><b>${p.name || "Product found"}</b><span>${p.brand || "Worldwide packaged food"}</span><p>${Math.round(p.calories || 0)} kcal · ${Math.round(p.sugar || 0)}g sugar · ${Math.round(p.protein || 0)}g protein per ${p.serving || "100 g"}</p></div></div>`;
+  } catch {
+    result.innerHTML = `<b>Barcode captured: ${code}</b><br><span>Product lookup needs the included Node server and an internet connection.</span>`;
+  }
+}
+
+async function prepareBarcodeDetector() {
+  if (!("BarcodeDetector" in window)) return null;
+  if (barcodeDetector) return barcodeDetector;
+  const preferred = ["ean_13","ean_8","upc_a","upc_e","code_128","code_39","qr_code"];
+  try {
+    const supported = await BarcodeDetector.getSupportedFormats();
+    barcodeDetector = new BarcodeDetector({formats: preferred.filter(x => supported.includes(x))});
+  } catch { barcodeDetector = new BarcodeDetector(); }
+  return barcodeDetector;
+}
+
+async function scanBarcodeFrame() {
+  if (!barcodeStream || barcodeBusy) { barcodeFrame = requestAnimationFrame(scanBarcodeFrame); return; }
+  const video = $("#barcodeVideo");
+  if (video.readyState < 2) { barcodeFrame = requestAnimationFrame(scanBarcodeFrame); return; }
+  const detector = await prepareBarcodeDetector();
+  if (!detector) return;
+  barcodeBusy = true;
+  try {
+    const codes = await detector.detect(video);
+    if (codes.length) {
+      const value = codes[0].rawValue;
+      $("#barcodeCameraStatus").textContent = `Barcode detected: ${value}`;
+      navigator.vibrate?.(120);
+      stopBarcodeCamera();
+      await lookupBarcode(value);
+      return;
+    }
+  } catch {}
+  barcodeBusy = false;
+  barcodeFrame = requestAnimationFrame(scanBarcodeFrame);
+}
+
+async function startBarcodeCamera() {
+  const status = $("#barcodeCameraStatus");
+  if (!navigator.mediaDevices?.getUserMedia) {
+    status.textContent = "Camera access is not supported here. Use the photo or manual option.";
+    return;
+  }
+  const detector = await prepareBarcodeDetector();
+  if (!detector) {
+    status.textContent = "Live barcode detection is not supported by this browser. Try Chrome on Android or use the barcode photo option.";
+    return;
+  }
+  try {
+    barcodeStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false});
+    const video = $("#barcodeVideo");
+    video.srcObject = barcodeStream;
+    await video.play();
+    $("#barcodeCameraPlaceholder").classList.add("hidden");
+    $("#barcodeCameraStage").classList.add("camera-live");
+    $("#startBarcodeCamera").classList.add("hidden");
+    $("#stopBarcodeCamera").classList.remove("hidden");
+    status.textContent = "Scanning… hold the barcode inside the frame.";
+    barcodeBusy = false;
+    barcodeFrame = requestAnimationFrame(scanBarcodeFrame);
+  } catch {
+    status.textContent = "Camera permission was blocked. Allow camera permission, or use the photo option.";
+  }
+}
+
+function stopBarcodeCamera() {
+  cancelAnimationFrame(barcodeFrame);
+  barcodeFrame = 0;
+  barcodeBusy = false;
+  if (barcodeStream) barcodeStream.getTracks().forEach(track => track.stop());
+  barcodeStream = null;
+  const video = $("#barcodeVideo");
+  if (video) video.srcObject = null;
+  $("#barcodeCameraPlaceholder")?.classList.remove("hidden");
+  $("#barcodeCameraStage")?.classList.remove("camera-live");
+  $("#startBarcodeCamera")?.classList.remove("hidden");
+  $("#stopBarcodeCamera")?.classList.add("hidden");
+}
+
+$("#startBarcodeCamera").addEventListener("click", startBarcodeCamera);
+$("#stopBarcodeCamera").addEventListener("click", stopBarcodeCamera);
+$("#barcodeSearch").addEventListener("click", () => lookupBarcode($("#barcodeInput").value));
+$("#barcodeInput").addEventListener("keydown", event => { if (event.key === "Enter") lookupBarcode(event.target.value); });
+$("#barcodeImageInput").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = $("#barcodeCameraStatus");
+  status.textContent = "Reading barcode photo…";
+  const detector = await prepareBarcodeDetector();
+  if (!detector) { status.textContent = "This browser cannot read barcode photos. Use live camera in Chrome Android or enter the number manually."; return; }
+  try {
+    const bitmap = await createImageBitmap(file);
+    const codes = await detector.detect(bitmap);
+    bitmap.close?.();
+    if (!codes.length) throw new Error();
+    status.textContent = `Barcode detected: ${codes[0].rawValue}`;
+    await lookupBarcode(codes[0].rawValue);
+  } catch { status.textContent = "No barcode was detected. Retake the photo closer, brighter and straight."; }
 });
 
 function loadProfile(){const p=state.profile||{};$("#name").value=p.name||'';$("#age").value=p.age||22;$("#height").value=p.height||170;$("#weight").value=p.weight||70;$("#gender").value=p.gender||'male';$("#activity").value=p.activity||'1.55';$("#goal").value=p.goal??'0';$("#dietStyle").value=p.dietStyle||'balanced';$("#allergy").value=p.allergy||'';$("#waterGoal").value=state.waterGoal||8;}
@@ -367,4 +507,4 @@ if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.ser
 
 function renderAll(){applyTheme();renderHome();renderFoods();renderPlanner();drawReports();}
 populateWorldFilters();
-ensureToday();loadProfile();updateHistory();persist();renderAll();
+ensureToday();loadProfile();updateHistory();persist();renderAll();animatePage("home");

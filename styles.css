@@ -164,3 +164,64 @@ nav{width:min(1180px,100%)}
 .world-home-strip>div{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-content:center;background:var(--surface);padding:11px 12px;border-radius:15px;box-shadow:var(--shadow)}
 .world-home-strip>div span{grid-row:1/3;font-size:1.45rem;align-self:center}.world-home-strip strong{font-size:1rem}.world-home-strip small{color:var(--muted);font-weight:700}.world-home-strip button{border:0;border-radius:15px;padding:0 16px;background:linear-gradient(135deg,#087f73,#0f5ea8);color:#fff;font-weight:900;white-space:nowrap}
 @media(max-width:700px){.world-home-strip{grid-template-columns:repeat(3,1fr)}.world-home-strip button{grid-column:1/4;padding:13px}.world-home-strip>div{grid-template-columns:1fr;text-align:center}.world-home-strip>div span{grid-row:auto}.world-home-strip small{font-size:.68rem}}
+
+
+/* WORLD EDITION V6 — complete categories, polished motion and camera scanning */
+:root{--motion:cubic-bezier(.22,1,.36,1);--glow:0 24px 70px rgba(8,127,115,.16)}
+body{background-image:radial-gradient(circle at 12% 2%,rgba(20,184,166,.08),transparent 24rem),radial-gradient(circle at 95% 28%,rgba(59,130,246,.07),transparent 22rem);background-attachment:fixed}
+header{position:relative;z-index:5}
+.page.active{display:block;animation:pageFade .48s var(--motion) both}
+.page.page-enter>*{animation:sectionRise .58s var(--motion) both;animation-delay:var(--reveal-delay,0ms)}
+.tool.active{animation:toolSlide .4s var(--motion) both}
+.card,.world-food-hero,.hero,.world-home-strip,.stats article,.world-card,.recipe,.insight{transition:transform .28s var(--motion),box-shadow .28s var(--motion),border-color .28s}
+.card:hover,.stats article:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+button{transition:transform .18s var(--motion),box-shadow .18s,filter .18s}
+button:active{transform:scale(.97)}
+.primary:hover,.soft:hover,.hero-actions button:hover,.world-home-strip button:hover{filter:brightness(1.04);box-shadow:0 12px 28px rgba(8,127,115,.18)}
+nav button{position:relative;border-radius:14px;padding:7px 4px}
+nav button.active:after{content:"";position:absolute;bottom:-5px;width:20px;height:3px;border-radius:99px;background:var(--primary);animation:navPop .35s var(--motion)}
+.glass.filled:after{animation:waterFill .45s var(--motion) both}
+.ring{animation:softPulse 3s ease-in-out infinite}
+.world-card{animation:cardReveal .48s var(--motion) both}
+.world-card:nth-of-type(3n+2){animation-delay:35ms}.world-card:nth-of-type(3n){animation-delay:70ms}
+.modal:not(.hidden){animation:backdropIn .25s ease both}.modal:not(.hidden) .modal-card{animation:modalUp .45s var(--motion) both}
+
+.category-title{margin-top:22px}
+.category-showcase{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.category-showcase button{position:relative;overflow:hidden;display:grid;justify-items:start;gap:3px;min-height:132px;padding:17px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--soft) 55%,var(--surface)));color:var(--text);text-align:left;box-shadow:var(--shadow)}
+.category-showcase button:before{content:"";position:absolute;right:-30px;top:-30px;width:95px;height:95px;border-radius:50%;background:color-mix(in srgb,var(--primary) 12%,transparent);transition:transform .35s var(--motion)}
+.category-showcase button:hover{transform:translateY(-5px);box-shadow:var(--glow);border-color:color-mix(in srgb,var(--primary) 35%,var(--line))}
+.category-showcase button:hover:before{transform:scale(1.25)}
+.category-showcase span{font-size:2rem;line-height:1}.category-showcase b{font-size:.95rem;margin-top:7px}.category-showcase small{color:var(--muted)}
+
+.barcode-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+.barcode-camera-card,.barcode-manual-card{height:100%}
+.scanner-heading{display:flex;align-items:center;gap:14px;text-align:left;margin-bottom:15px}.scanner-heading h3{margin-bottom:4px}.scanner-heading p{margin-bottom:0;color:var(--muted);font-size:.82rem}
+.camera-stage{position:relative;min-height:330px;border-radius:24px;overflow:hidden;background:linear-gradient(145deg,#10211f,#0b1513);border:1px solid color-mix(in srgb,var(--primary) 35%,var(--line));display:grid;place-items:center}
+#barcodeVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}.camera-live #barcodeVideo{opacity:1}
+.camera-placeholder{display:grid;justify-items:center;gap:8px;color:#d6efea;padding:30px;text-align:center}.camera-placeholder span{font-size:3rem}.camera-placeholder small{color:#91aca6;max-width:290px}
+.scan-frame{position:absolute;width:min(78%,360px);height:145px;border:2px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}
+.scan-frame:before,.scan-frame:after,.scan-frame i:before,.scan-frame i:after{content:"";position:absolute;width:28px;height:28px;border-color:#5eead4;border-style:solid}
+.scan-frame:before{left:-3px;top:-3px;border-width:4px 0 0 4px;border-radius:14px 0 0 0}.scan-frame:after{right:-3px;top:-3px;border-width:4px 4px 0 0;border-radius:0 14px 0 0}.scan-frame i:before{left:-3px;bottom:-3px;border-width:0 0 4px 4px;border-radius:0 0 0 14px}.scan-frame i:after{right:-3px;bottom:-3px;border-width:0 4px 4px 0;border-radius:0 0 14px 0}
+.scan-line{display:none;position:absolute;width:min(72%,330px);height:2px;background:linear-gradient(90deg,transparent,#5eead4,transparent);box-shadow:0 0 14px #5eead4}.camera-live .scan-line{display:block;animation:barcodeSweep 2s ease-in-out infinite}
+.camera-actions{display:grid;grid-template-columns:1fr auto;gap:10px}.camera-actions .primary{margin-top:12px}.camera-actions .soft{margin-top:12px}
+.scanner-label{display:grid;gap:7px;text-align:left;font-size:.8rem;font-weight:800;color:var(--muted)}
+.barcode-photo-button{display:block;margin-top:12px;padding:13px;border:1px dashed color-mix(in srgb,var(--primary) 45%,var(--line));border-radius:14px;background:color-mix(in srgb,var(--soft) 55%,var(--surface));color:var(--primary);font-weight:850;cursor:pointer}.barcode-photo-button input{display:none}
+.lookup-loading{display:flex;align-items:center;gap:10px}.lookup-loading span{width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+.barcode-product{display:flex;gap:12px;align-items:flex-start}.barcode-product-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:var(--surface);font-size:1.4rem}.barcode-product b,.barcode-product span{display:block}.barcode-product span,.barcode-product p{color:var(--muted);font-size:.78rem}.barcode-product p{margin:6px 0 0}
+
+@keyframes pageFade{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@keyframes sectionRise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes toolSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes cardReveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes modalUp{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes backdropIn{from{opacity:0}to{opacity:1}}
+@keyframes navPop{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes waterFill{from{transform:translateY(28px)}to{transform:none}}
+@keyframes softPulse{50%{transform:scale(1.025)}}
+@keyframes barcodeSweep{0%,100%{transform:translateY(-58px);opacity:.35}50%{transform:translateY(58px);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:900px){.category-showcase{grid-template-columns:repeat(2,1fr)}.barcode-layout{grid-template-columns:1fr}}
+@media(max-width:620px){.category-showcase{grid-template-columns:repeat(2,1fr);gap:9px}.category-showcase button{min-height:120px;padding:14px}.camera-stage{min-height:285px}.scanner-heading .big{font-size:2.2rem}.camera-actions{grid-template-columns:1fr}.camera-actions .soft{margin-top:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}

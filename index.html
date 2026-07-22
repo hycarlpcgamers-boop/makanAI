@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World — explore, scan and track foods from around the world."><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=5.1.0"><title>MakanAI World V5 — Global Food Explorer</title>
+<link rel="stylesheet" href="styles.css?v=6.0.0"><title>MakanAI World V6 — Global Food Explorer</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V5.1</div></div>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V6.0 · COMPLETE FOOD LIBRARY</div></div>
 <div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
 <div class="welcome"><div><span id="today"></span><h2 id="welcome">Hi, welcome back 👋</h2></div><div class="streak"><b id="streak">0</b><span>day streak</span></div></div>
 <div class="world-home-strip">
-  <div><span>🌍</span><strong>505+</strong><small>global dishes</small></div>
-  <div><span>🏳️</span><strong>75</strong><small>countries</small></div>
+  <div><span>🌍</span><strong id="homeFoodCount">1,000+</strong><small>foods & drinks</small></div>
+  <div><span>🏳️</span><strong id="homeCountryCount">75+</strong><small>countries</small></div>
   <div><span>🔤</span><strong>A–Z</strong><small>food explorer</small></div>
   <button data-go="foods">Explore World Foods →</button>
 </div>
-<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track meals and discover dishes from 75 countries.</p>
+<div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track complete meals, fruits, drinks, chocolate, snacks and packaged products.</p>
 <div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button></div></div>
 <div class="ring" id="ring"><div><b id="percent">0%</b><span>used</span></div></div></div>
 <div class="stats"><article><span>Calories</span><b id="calories">0 kcal</b></article><article><span>Protein</span><b id="protein">0 g</b></article><article><span>Carbs</span><b id="carbs">0 g</b></article><article><span>Fat</span><b id="fat">0 g</b></article></div>
@@ -37,7 +37,31 @@
 <div id="scanResult" class="hidden"><div class="title"><h3>Review detected foods</h3></div><div id="detected" class="list"></div><button id="saveDetected" class="primary">Save Detected Meal</button></div>
 </div>
 <div id="labelTool" class="tool"><div class="card center"><div class="big">🧾</div><h3>Nutrition Label Scanner</h3><p>Extract serving size, calories, sugar, sodium and macros.</p><input id="labelImage" type="file" accept="image/*"><button id="labelDemo" class="soft full">Run Demo Extraction</button><div id="labelResult" class="result hidden"></div></div></div>
-<div id="barcodeTool" class="tool"><div class="card center"><div class="big">▥</div><h3>Barcode Lookup</h3><input id="barcodeInput" placeholder="Enter barcode number"><button id="barcodeSearch" class="soft full">Search Barcode</button><div id="barcodeResult" class="result hidden"></div></div></div>
+<div id="barcodeTool" class="tool">
+<div class="barcode-layout">
+  <div class="card barcode-camera-card">
+    <div class="scanner-heading"><div class="big">▥</div><div><h3>Scan barcode with phone camera</h3><p>Point the back camera at a food or drink barcode.</p></div></div>
+    <div class="camera-stage" id="barcodeCameraStage">
+      <video id="barcodeVideo" playsinline muted></video>
+      <div class="camera-placeholder" id="barcodeCameraPlaceholder"><span>📱</span><b>Camera scanner ready</b><small>Use HTTPS or localhost to allow camera access.</small></div>
+      <div class="scan-frame"><i></i></div>
+      <div class="scan-line"></div>
+    </div>
+    <div class="camera-actions">
+      <button id="startBarcodeCamera" class="primary">Open phone camera</button>
+      <button id="stopBarcodeCamera" class="soft hidden">Stop camera</button>
+    </div>
+    <p id="barcodeCameraStatus" class="note">Supports EAN, UPC, QR and common product barcode formats when available in the browser.</p>
+  </div>
+  <div class="card barcode-manual-card">
+    <div class="scanner-heading"><div class="big">⌨️</div><div><h3>Manual or photo fallback</h3><p>Type the number or take a close photo of the barcode.</p></div></div>
+    <label class="scanner-label">Barcode number<input id="barcodeInput" inputmode="numeric" autocomplete="off" placeholder="Example: 9551234567890"></label>
+    <button id="barcodeSearch" class="soft full">Search barcode</button>
+    <label class="barcode-photo-button">📷 Take barcode photo<input id="barcodeImageInput" type="file" accept="image/*" capture="environment"></label>
+    <div id="barcodeResult" class="result hidden"></div>
+  </div>
+</div>
+</div>
 </section>
 
 <section id="foods" class="page">
@@ -48,9 +72,9 @@
     <p>Browse a curated global starter library, then search packaged products online when the server is connected.</p>
   </div>
   <div class="world-mini-stats">
-    <div><b id="worldFoodCount">505</b><span>foods</span></div>
+    <div><b id="worldFoodCount">1,000+</b><span>foods</span></div>
     <div><b id="worldCountryCount">75</b><span>countries</span></div>
-    <div><b id="worldCategoryCount">14</b><span>categories</span></div>
+    <div><b id="worldCategoryCount">28+</b><span>categories</span></div>
   </div>
 </div>
 
@@ -97,6 +121,18 @@
       <button id="clearFoodFilters" class="link">Reset filters</button>
     </div>
   </div>
+</div>
+
+<div class="title compact category-title"><div><small>EVERY TYPE OF FOOD</small><h3>Browse popular categories</h3></div><span>Tap a category to explore</span></div>
+<div class="category-showcase">
+  <button data-quick-category="Fruits & Berries"><span>🍎</span><b>Fruits</b><small>Fresh & dried</small></button>
+  <button data-quick-category="Water & Hydration"><span>💧</span><b>Water</b><small>Hydration drinks</small></button>
+  <button data-quick-category="Juices & Smoothies"><span>🧃</span><b>Juices</b><small>Smoothies & shakes</small></button>
+  <button data-quick-category="Chocolate & Candy"><span>🍫</span><b>Chocolate</b><small>Candy & sweets</small></button>
+  <button data-quick-category="Chips & Savoury Snacks"><span>🍿</span><b>Snacks</b><small>Chips & crackers</small></button>
+  <button data-quick-category="Nuts & Seeds"><span>🥜</span><b>Nuts</b><small>Seeds & spreads</small></button>
+  <button data-quick-category="Coffee & Tea"><span>☕</span><b>Coffee & Tea</b><small>Hot & iced</small></button>
+  <button data-quick-category="Dairy & Alternatives"><span>🥛</span><b>Dairy</b><small>Milk & alternatives</small></button>
 </div>
 
 <div class="card global-product-card">
@@ -172,6 +208,6 @@
 <div id="nutritionPreview" class="nutrition nutrition-six"></div>
 <button id="confirmFood" class="primary">Add to Diary</button>
 </div></div>
-<div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-<div id="toast" class="toast"></div><script src="world-foods.js?v=5.1.0"></script><script src="app.js?v=5.1.0"></script>
+<div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Water & Hydration</option><option>Juices & Smoothies</option><option>Coffee & Tea</option><option>Soft Drinks</option><option>Fruits & Berries</option><option>Chocolate & Candy</option><option>Chips & Savoury Snacks</option><option>Nuts & Seeds</option><option>Cereals & Granola</option><option>Dairy & Alternatives</option><option>Ice Cream & Frozen Desserts</option><option>Biscuits & Packaged Bakery</option><option>Everyday Staples</option><option>Vegetables & Legumes</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
+<div id="toast" class="toast"></div><script src="world-foods.js?v=6.0.0"></script><script src="everyday-foods.js?v=6.0.0"></script><script src="app.js?v=6.0.0"></script>
 </body></html>
