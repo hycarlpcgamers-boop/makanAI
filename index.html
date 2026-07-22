@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="MakanAI Malaysia - Malaysian food calorie tracker and AI food scanner prototype." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>MakanAI Malaysia</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Smart Malaysian nutrition tracker</p>
+        <h1>MakanAI Malaysia</h1>
+      </div>
+      <button id="installBtn" class="secondary hidden">Install App</button>
+    </header>
+
+    <main>
+      <section id="home" class="page active">
+        <div class="hero-card">
+          <div>
+            <span class="pill">Today</span>
+            <h2>Track what you eat without the headache.</h2>
+            <p>Log Malaysian meals, estimate calories, and keep an eye on your daily targets.</p>
+          </div>
+          <div class="calorie-ring" id="calorieRing">
+            <div>
+              <strong id="remainingCalories">2000</strong>
+              <span>kcal left</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span>Consumed</span><strong id="consumedCalories">0 kcal</strong></article>
+          <article class="stat-card"><span>Protein</span><strong id="proteinTotal">0 g</strong></article>
+          <article class="stat-card"><span>Carbs</span><strong id="carbTotal">0 g</strong></article>
+          <article class="stat-card"><span>Fat</span><strong id="fatTotal">0 g</strong></article>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Meal diary</p>
+            <h3>Today’s meals</h3>
+          </div>
+          <button class="text-btn" data-go="foods">+ Add food</button>
+        </div>
+
+        <div id="mealList" class="meal-list"></div>
+      </section>
+
+      <section id="scan" class="page">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Photo scanner</p>
+            <h2>Scan your meal</h2>
+          </div>
+        </div>
+
+        <div class="scan-card">
+          <div class="upload-zone" id="uploadZone">
+            <input id="foodImage" type="file" accept="image/*" capture="environment" />
+            <img id="previewImage" alt="Food preview" class="hidden" />
+            <div id="uploadPrompt">
+              <div class="camera-icon">📷</div>
+              <strong>Take or upload a food photo</strong>
+              <span>Best results: bright lighting and full plate visible</span>
+            </div>
+          </div>
+
+          <button id="analyzeBtn" class="primary" disabled>Analyse Food</button>
+          <p class="small-note">Prototype note: this version uses a guided demo scanner. Connect an AI vision API for real recognition.</p>
+        </div>
+
+        <div id="scanResults" class="hidden">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Suggested match</p>
+              <h3>Confirm your food</h3>
+            </div>
+          </div>
+          <div id="suggestions" class="suggestion-list"></div>
+        </div>
+      </section>
+
+      <section id="foods" class="page">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Malaysian database</p>
+            <h2>Add a meal</h2>
+          </div>
+        </div>
+
+        <div class="search-wrap">
+          <input id="foodSearch" type="search" placeholder="Search nasi lemak, roti canai..." />
+        </div>
+
+        <div class="filters">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="Rice">Rice</button>
+          <button class="filter" data-filter="Noodles">Noodles</button>
+          <button class="filter" data-filter="Drinks">Drinks</button>
+          <button class="filter" data-filter="Snacks">Snacks</button>
+        </div>
+
+        <div id="foodGrid" class="food-grid"></div>
+      </section>
+
+      <section id="profile" class="page">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Your target</p>
+            <h2>Calorie calculator</h2>
+          </div>
+        </div>
+
+        <form id="profileForm" class="form-card">
+          <label>Name<input id="name" type="text" placeholder="Your name" /></label>
+          <div class="two-col">
+            <label>Age<input id="age" type="number" min="13" max="100" value="22" required /></label>
+            <label>Gender
+              <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </label>
+          </div>
+          <div class="two-col">
+            <label>Height (cm)<input id="height" type="number" min="120" max="230" value="170" required /></label>
+            <label>Weight (kg)<input id="weight" type="number" min="35" max="250" value="70" step="0.1" required /></label>
+          </div>
+          <label>Activity level
+            <select id="activity">
+              <option value="1.2">Sedentary</option>
+              <option value="1.375">Lightly active</option>
+              <option value="1.55" selected>Moderately active</option>
+              <option value="1.725">Very active</option>
+            </select>
+          </label>
+          <label>Goal
+            <select id="goal">
+              <option value="-400">Lose weight</option>
+              <option value="0" selected>Maintain weight</option>
+              <option value="300">Gain weight</option>
+            </select>
+          </label>
+          <button type="submit" class="primary">Calculate My Target</button>
+        </form>
+
+        <div class="result-card">
+          <span>Recommended daily target</span>
+          <strong id="dailyTarget">2000 kcal</strong>
+          <p>This estimate uses the Mifflin–St Jeor equation and is not medical advice.</p>
+        </div>
+
+        <button id="clearDataBtn" class="danger">Clear saved app data</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="home"><span>⌂</span>Home</button>
+      <button class="nav-item" data-page="scan"><span>◉</span>Scan</button>
+      <button class="nav-item" data-page="foods"><span>＋</span>Foods</button>
+      <button class="nav-item" data-page="profile"><span>☺</span>Profile</button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
