@@ -1,12 +1,13 @@
-const CACHE = 'makanai-world-v7-0';
+const CACHE = 'makanai-world-v8-0';
 const ASSETS = [
   './',
   'index.html',
-  'styles.css?v=7.0.0',
-  'world-foods.js?v=7.0.0',
-  'everyday-foods.js?v=7.0.0',
-  'app.js?v=7.0.0',
-  'coach.js?v=7.0.0',
+  'styles.css?v=8.0.0',
+  'world-foods.js?v=8.0.0',
+  'everyday-foods.js?v=8.0.0',
+  'app.js?v=8.0.0',
+  'coach.js?v=8.0.0',
+  'shop.js?v=8.0.0',
   'manifest.json',
   'icon-192.png',
   'icon-512.png'

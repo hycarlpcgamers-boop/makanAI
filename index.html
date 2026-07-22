@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World — explore, scan and track foods from around the world."><link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=7.0.0"><title>MakanAI World V7 — AI Diet Coach</title>
+<meta name="theme-color" content="#087f73"><meta name="description" content="MakanAI World V8 — worldwide nutrition, AI food scanning, restaurant menus, grocery receipts, pantry and expiry tracking."><link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css?v=8.0.0"><title>MakanAI World V8 — Shop & Dine</title>
 </head>
 <body>
 <div class="app">
-<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V7.0 · AI COACH & GAMIFICATION</div></div>
+<header><div><small>GLOBAL AI NUTRITION & FOOD DISCOVERY</small><h1><span class="brand-mark">M</span>MakanAI World</h1><div class="version-badge">WORLD EDITION V8.0 · SHOP, DINE & PANTRY AI</div></div>
 <div class="header-actions"><button id="themeBtn">☾</button><button id="installBtn" class="hidden">Install</button></div></header>
 <main>
 <section id="home" class="page active">
@@ -17,6 +17,22 @@
   <div><span>🏳️</span><strong id="homeCountryCount">75+</strong><small>countries</small></div>
   <div><span>🔤</span><strong>A–Z</strong><small>food explorer</small></div>
   <button data-go="foods">Explore World Foods →</button>
+</div>
+<div class="shop-dine-home card">
+  <div class="shop-dine-visual">
+    <span class="shop-orb shop-orb-one">🍽️</span>
+    <span class="shop-orb shop-orb-two">🛒</span>
+    <span class="shop-orb shop-orb-three">🥬</span>
+  </div>
+  <div class="shop-dine-copy">
+    <small>NEW · SHOP & DINE AI</small>
+    <h3>Scan menus, receipts and your fridge</h3>
+    <p>Choose better restaurant meals, organise groceries, track expiry dates and cook from ingredients you already own.</p>
+    <div class="shop-dine-actions">
+      <button class="soft" data-go="shop">Open Shop & Dine</button>
+      <button class="link" data-shop-tool="finder">Find restaurants</button>
+    </div>
+  </div>
 </div>
 <div class="hero"><div><em>DAILY GOAL</em><h2><span id="remaining">2000</span> kcal left</h2><p id="goalMsg">Track complete meals, fruits, drinks, chocolate, snacks and packaged products.</p>
 <div class="hero-actions"><button data-go="scan">Scan Food</button><button data-go="foods">Add Manually</button><button data-go="planner">Ask AI Coach</button></div></div>
@@ -171,6 +187,174 @@
 </div>
 </section>
 
+
+<section id="shop" class="page">
+<div class="shop-page-hero">
+  <div>
+    <span class="world-kicker">SHOP & DINE AI</span>
+    <h2>Choose, buy, store and cook smarter</h2>
+    <p>Scan restaurant menus, compare choices, organise receipts, recognise pantry ingredients and receive expiry reminders.</p>
+  </div>
+  <div class="shop-page-stat">
+    <b id="pantryCountHero">0</b>
+    <span>pantry items</span>
+  </div>
+</div>
+
+<div id="shopToolTabs" class="shop-tool-tabs">
+  <button class="active" data-shop-panel="menu"><span>📋</span><b>Menu</b></button>
+  <button data-shop-panel="finder"><span>📍</span><b>Nearby</b></button>
+  <button data-shop-panel="receipt"><span>🧾</span><b>Receipt</b></button>
+  <button data-shop-panel="pantry"><span>🧊</span><b>Pantry</b></button>
+  <button data-shop-panel="expiry"><span>⏰</span><b>Expiry</b></button>
+</div>
+
+<div id="menuShopPanel" class="shop-panel active">
+  <div class="shop-two-column">
+    <div class="card premium-scanner-card">
+      <div class="scanner-heading">
+        <div class="big">📋</div>
+        <div><small>SMART MENU SCANNER</small><h3>Scan a restaurant menu</h3><p>Take a clear picture of the menu page or upload a screenshot.</p></div>
+      </div>
+      <div class="shop-upload">
+        <input id="menuImageInput" type="file" accept="image/*" capture="environment">
+        <img id="menuImagePreview" class="hidden" alt="Menu preview">
+        <div id="menuUploadPrompt"><span>📸</span><b>Take or upload menu photo</b><small>Include item names, descriptions and prices.</small></div>
+      </div>
+      <button id="analyseMenuBtn" class="primary" disabled>Analyse Menu Choices</button>
+      <p class="note">Calorie and price results are estimates unless official nutrition information is available.</p>
+    </div>
+    <div class="card menu-guide-card">
+      <small>PERSONALISED FILTER</small>
+      <h3 id="menuProfileTitle">Best choices for your profile</h3>
+      <div id="menuProfileSummary" class="menu-profile-summary"></div>
+      <div class="guide-key">
+        <span><i class="choice-dot best"></i> Best choice</span>
+        <span><i class="choice-dot moderate"></i> Moderate</span>
+        <span><i class="choice-dot high"></i> Higher calorie</span>
+      </div>
+    </div>
+  </div>
+  <div id="menuScanResults" class="hidden">
+    <div class="title compact"><div><small>MENU COMPARISON</small><h3>Recommended menu items</h3></div><button id="clearMenuResults" class="link">Clear</button></div>
+    <div id="menuChoiceGrid" class="menu-choice-grid"></div>
+  </div>
+</div>
+
+<div id="finderShopPanel" class="shop-panel">
+  <div class="card finder-card">
+    <div class="finder-header">
+      <div><small>SMART RESTAURANT FINDER</small><h3>Find food that matches your goals</h3><p>Use your phone location or search a city manually.</p></div>
+      <div class="finder-pin">📍</div>
+    </div>
+    <div class="finder-controls">
+      <div class="finder-location-row">
+        <input id="restaurantLocation" placeholder="City or area, example: Kuala Lumpur">
+        <button id="useRestaurantLocation" class="soft">Use my location</button>
+      </div>
+      <div class="finder-filter-grid">
+        <label>Budget per meal
+          <select id="restaurantBudget">
+            <option value="15">Under RM15</option>
+            <option value="25" selected>Under RM25</option>
+            <option value="40">Under RM40</option>
+            <option value="80">Any budget</option>
+          </select>
+        </label>
+        <label>Preference
+          <select id="restaurantPreference">
+            <option value="all">Best overall</option>
+            <option value="halal">Halal-friendly</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="protein">High protein</option>
+            <option value="lower-calorie">Lower calorie</option>
+          </select>
+        </label>
+        <label>Distance
+          <select id="restaurantRadius">
+            <option value="1500">Within 1.5 km</option>
+            <option value="3000" selected>Within 3 km</option>
+            <option value="5000">Within 5 km</option>
+          </select>
+        </label>
+        <button id="findRestaurantsBtn" class="primary">Find Restaurants</button>
+      </div>
+      <p id="restaurantLocationStatus" class="note">Restaurant dietary labels are based on available public data and may be incomplete. Confirm directly with the restaurant.</p>
+    </div>
+  </div>
+  <div id="restaurantResults" class="restaurant-results"></div>
+</div>
+
+<div id="receiptShopPanel" class="shop-panel">
+  <div class="shop-two-column">
+    <div class="card premium-scanner-card">
+      <div class="scanner-heading"><div class="big">🧾</div><div><small>GROCERY RECEIPT AI</small><h3>Turn a receipt into organised data</h3><p>Capture item names, prices and estimated grocery categories.</p></div></div>
+      <div class="shop-upload">
+        <input id="receiptImageInput" type="file" accept="image/*" capture="environment">
+        <img id="receiptImagePreview" class="hidden" alt="Receipt preview">
+        <div id="receiptUploadPrompt"><span>🛍️</span><b>Take or upload receipt photo</b><small>Flatten the receipt and use bright lighting.</small></div>
+      </div>
+      <button id="analyseReceiptBtn" class="primary" disabled>Scan Receipt</button>
+    </div>
+    <div class="card spending-summary-card">
+      <small>WEEKLY FOOD SPENDING</small>
+      <strong id="weeklySpendValue">RM 0.00</strong>
+      <div class="spend-track"><i id="weeklySpendBar"></i></div>
+      <span id="weeklySpendText">Set a daily food budget in Profile.</span>
+    </div>
+  </div>
+  <div id="receiptResults" class="hidden">
+    <div class="title compact"><div><small>EXTRACTED ITEMS</small><h3>Receipt review</h3></div><span id="receiptTotal">RM 0.00</span></div>
+    <div id="receiptItemList" class="receipt-item-list"></div>
+    <div class="receipt-actions"><button id="receiptToGrocery" class="soft">Add items to grocery list</button><button id="saveReceiptBtn" class="primary">Save Receipt</button></div>
+  </div>
+  <div class="card receipt-history-card"><div class="title compact"><h3>Receipt history</h3><button id="clearReceipts" class="link">Clear</button></div><div id="receiptHistory" class="receipt-history"></div></div>
+</div>
+
+<div id="pantryShopPanel" class="shop-panel">
+  <div class="shop-two-column">
+    <div class="card premium-scanner-card">
+      <div class="scanner-heading"><div class="big">🧊</div><div><small>FRIDGE & PANTRY AI</small><h3>Scan ingredients you already have</h3><p>Take a photo of your fridge shelf, pantry or kitchen counter.</p></div></div>
+      <div class="shop-upload">
+        <input id="pantryImageInput" type="file" accept="image/*" capture="environment">
+        <img id="pantryImagePreview" class="hidden" alt="Pantry preview">
+        <div id="pantryUploadPrompt"><span>🥕</span><b>Take or upload pantry photo</b><small>Spread ingredients apart so they are easier to identify.</small></div>
+      </div>
+      <button id="analysePantryBtn" class="primary" disabled>Recognise Ingredients</button>
+    </div>
+    <div class="card pantry-manual-card">
+      <small>QUICK ADD</small><h3>Add pantry item manually</h3>
+      <form id="pantryManualForm" class="form">
+        <label>Item name<input id="pantryManualName" placeholder="Example: Eggs" required></label>
+        <div class="two"><label>Quantity<input id="pantryManualQty" placeholder="6 pieces"></label><label>Expiry<input id="pantryManualExpiry" type="date"></label></div>
+        <button class="soft full">Add to Pantry</button>
+      </form>
+    </div>
+  </div>
+  <div class="card pantry-list-card">
+    <div class="title compact"><div><small>MY KITCHEN</small><h3>Pantry inventory</h3></div><button id="clearPantry" class="link">Clear</button></div>
+    <div id="pantryInventory" class="pantry-inventory"></div>
+  </div>
+  <div class="card pantry-recipe-card">
+    <div class="title compact"><div><small>COOK WHAT YOU HAVE</small><h3>Recipe suggestions</h3></div><button id="refreshPantryRecipes" class="link">Refresh</button></div>
+    <div id="pantryRecipeResults" class="pantry-recipe-results"></div>
+  </div>
+</div>
+
+<div id="expiryShopPanel" class="shop-panel">
+  <div class="expiry-dashboard">
+    <article><span>⚠️</span><div><b id="expiringSoonCount">0</b><small>expiring soon</small></div></article>
+    <article><span>❌</span><div><b id="expiredCount">0</b><small>expired</small></div></article>
+    <article><span>✅</span><div><b id="freshCount">0</b><small>fresh items</small></div></article>
+  </div>
+  <div class="card">
+    <div class="title compact"><div><small>FOOD EXPIRY REMINDER</small><h3>Use food before it is wasted</h3></div><button id="requestExpiryNotifications" class="soft">Enable alerts</button></div>
+    <div id="expiryTimeline" class="expiry-timeline"></div>
+  </div>
+</div>
+</section>
+
 <section id="reports" class="page">
 <div class="title"><div><small>PROGRESS</small><h2>Weekly report</h2></div></div>
 <div class="stats reports"><article><span>Average calories</span><b id="avgCalories">0</b></article><article><span>Best streak</span><b id="bestStreak">0 days</b></article><article><span>Meals logged</span><b id="mealCount">0</b></article><article><span>Water average</span><b id="avgWater">0</b></article></div>
@@ -237,6 +421,28 @@
 <div class="card challenge-card"><div class="title compact"><div><small>XP CHALLENGE</small><h3>Weekly health challenge</h3></div><button id="newChallenge" class="link">New challenge</button></div><div id="challengeCard" class="challenge"></div></div>
 </section>
 
+
+<section id="more" class="page">
+<div class="title"><div><small>MORE TOOLS</small><h2>Everything in one place</h2></div></div>
+<div class="more-hero card">
+  <div><span>✨</span><div><small>WORLD EDITION V8</small><h3>One app for eating, shopping and cooking</h3><p>Open advanced tools without overcrowding the mobile navigation bar.</p></div></div>
+</div>
+<div class="more-grid">
+  <button data-go="shop"><span>🛒</span><div><b>Shop & Dine</b><small>Menus, restaurants, receipts, pantry and expiry</small></div><i>→</i></button>
+  <button data-go="reports"><span>📊</span><div><b>Reports</b><small>Calories, macros, achievements and progress</small></div><i>→</i></button>
+  <button data-go="profile"><span>⚙️</span><div><b>Profile & Settings</b><small>Goals, preferences, reminders and data tools</small></div><i>→</i></button>
+</div>
+<div class="card more-quick-card">
+  <div class="title compact"><h3>Quick actions</h3></div>
+  <div class="more-quick-actions">
+    <button data-shop-tool="menu"><span>📋</span>Scan menu</button>
+    <button data-shop-tool="receipt"><span>🧾</span>Scan receipt</button>
+    <button data-shop-tool="pantry"><span>🧊</span>Scan pantry</button>
+    <button data-shop-tool="finder"><span>📍</span>Find restaurant</button>
+  </div>
+</div>
+</section>
+
 <section id="profile" class="page">
 <div class="title"><div><small>PERSONAL SETTINGS</small><h2>Your health profile</h2></div></div>
 <form id="profileForm" class="card form">
@@ -272,7 +478,7 @@
 <div class="card"><h3>Data tools</h3><button id="exportBtn" class="soft full">Export My Data</button><label class="file">Import Data<input id="importInput" type="file" accept=".json"></label><button id="clearBtn" class="danger full">Clear all app data</button></div>
 </section>
 </main>
-<nav><button class="active" data-page="home">⌂<span>Home</span></button><button data-page="scan">◉<span>Scan</span></button><button data-page="foods">＋<span>Foods</span></button><button data-page="planner">✨<span>Coach</span></button><button data-page="reports">▥<span>Reports</span></button><button data-page="profile">☺<span>Profile</span></button></nav>
+<nav><button class="active" data-page="home"><b>⌂</b><span>Home</span></button><button data-page="scan"><b>◉</b><span>Scan</span></button><button data-page="foods"><b>＋</b><span>Foods</span></button><button data-page="planner"><b>✨</b><span>Coach</span></button><button data-page="more"><b>•••</b><span>More</span></button></nav>
 </div>
 
 <div id="foodModal" class="modal hidden"><div class="modal-card food-detail-modal">
@@ -285,5 +491,5 @@
 <button id="confirmFood" class="primary">Add to Diary</button>
 </div></div>
 <div id="customModal" class="modal hidden"><div class="modal-card"><button id="closeCustom" class="close">×</button><h3>Create custom food</h3><form id="customForm" class="form"><label>Food name<input id="customName" required></label><label>Country / origin<input id="customCountry" placeholder="Example: Malaysia"></label><label>Category<select id="customCategory"><option>Rice & Grains</option><option>Noodles & Pasta</option><option>Meat & Poultry</option><option>Seafood</option><option>Soups & Stews</option><option>Bread & Bakery</option><option>Breakfast</option><option>Snacks & Street Food</option><option>Desserts & Sweets</option><option>Drinks</option><option>Water & Hydration</option><option>Juices & Smoothies</option><option>Coffee & Tea</option><option>Soft Drinks</option><option>Fruits & Berries</option><option>Chocolate & Candy</option><option>Chips & Savoury Snacks</option><option>Nuts & Seeds</option><option>Cereals & Granola</option><option>Dairy & Alternatives</option><option>Ice Cream & Frozen Desserts</option><option>Biscuits & Packaged Bakery</option><option>Everyday Staples</option><option>Vegetables & Legumes</option><option>Vegetables & Salads</option><option>Dairy & Eggs</option><option>Fast Food</option><option>Sauces & Condiments</option></select></label><label>Serving<input id="customServing" placeholder="1 plate" required></label><div class="two"><label>Calories<input id="customCalories" type="number" required></label><label>Protein<input id="customProtein" type="number" required></label></div><div class="two"><label>Carbs<input id="customCarbs" type="number" required></label><label>Fat<input id="customFat" type="number" required></label></div><button class="primary">Save Custom Food</button></form></div></div>
-<div id="toast" class="toast"></div><script src="world-foods.js?v=7.0.0"></script><script src="everyday-foods.js?v=7.0.0"></script><script src="app.js?v=7.0.0"></script><script src="coach.js?v=7.0.0"></script>
+<div id="toast" class="toast"></div><script src="world-foods.js?v=8.0.0"></script><script src="everyday-foods.js?v=8.0.0"></script><script src="app.js?v=8.0.0"></script><script src="coach.js?v=8.0.0"></script><script src="shop.js?v=8.0.0"></script>
 </body></html>

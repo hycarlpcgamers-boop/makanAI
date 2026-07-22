@@ -52,7 +52,7 @@ function normaliseV7State() {
 normaliseV7State();
 
 persist = function persistV7() {
-  localStorage.setItem("makanaiWorldV7", JSON.stringify(state));
+  localStorage.setItem("makanaiWorldV8", JSON.stringify(state));
 };
 
 function getLevelInfo() {

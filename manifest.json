@@ -1,11 +1,11 @@
 {
-  "name": "MakanAI World V7 AI Diet Coach",
-  "short_name": "MakanAI World",
+  "name": "MakanAI World V8 Shop & Dine",
+  "short_name": "MakanAI V8",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f7f6",
   "theme_color": "#087f73",
-  "description": "Worldwide nutrition tracker with AI diet coach, 7-day budget meal plans, food scanning, barcode camera, reminders and gamification.",
+  "description": "Worldwide nutrition app with AI menu scanning, restaurant finder, grocery receipts, pantry AI, expiry reminders and barcode camera.",
   "icons": [
     {
       "src": "icon-192.png",

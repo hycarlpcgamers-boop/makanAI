@@ -9,7 +9,7 @@ const port = Number(process.env.PORT || 8000);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OFF_HEADERS = {
-  "User-Agent": "MakanAI-World/7.0 (educational nutrition app)",
+  "User-Agent": "MakanAI-World/8.0 (educational nutrition app)",
   "Accept": "application/json"
 };
 
@@ -132,6 +132,170 @@ Do not calculate nutrition; the app matches names to its own food library.`
 });
 
 
+
+function parseModelJson(text = "") {
+  const clean = String(text).trim()
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/```$/i, "")
+    .trim();
+  return JSON.parse(clean);
+}
+
+app.post("/api/analyze-shop-image", async (req, res) => {
+  try {
+    const { image, mode, profile = {} } = req.body || {};
+    if (!image || typeof image !== "string") {
+      return res.status(400).json({ error: "An image is required." });
+    }
+    if (!["menu", "receipt", "pantry"].includes(mode)) {
+      return res.status(400).json({ error: "Unsupported analysis mode." });
+    }
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(503).json({ error: "AI is not configured. The app will use demo mode." });
+    }
+
+    const prompts = {
+      menu: `Analyse this restaurant menu image. Extract up to 12 visible menu items.
+Return ONLY valid JSON:
+{"items":[{"name":"item name","emoji":"🍽️","description":"short ingredient description","price":18.9,"calories":520,"protein":30,"carbs":55,"fat":18,"sugar":7,"sodium":700,"vegetarian":false,"halal":"Not verified"}]}
+Estimate nutrition only when official values are not visible. Treat halal and allergy status as unverified unless explicitly stated. User preferences: ${JSON.stringify(profile)}`,
+      receipt: `Analyse this grocery receipt image. Extract purchased food and drink items and prices.
+Return ONLY valid JSON:
+{"items":[{"name":"product name","category":"Fruits & Berries","price":5.9}]}
+Ignore non-food items and totals. Use concise global food categories.`,
+      pantry: `Identify visible edible ingredients, food and drinks in this fridge, pantry or kitchen image.
+Return ONLY valid JSON:
+{"items":[{"name":"ingredient name","emoji":"🥬","quantity":"estimated quantity","expiry":""}]}
+Do not invent exact expiry dates. Leave expiry as an empty string unless a readable date is visible.`
+    };
+
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-5",
+      input: [{
+        role: "user",
+        content: [
+          { type: "input_text", text: prompts[mode] },
+          { type: "input_image", image_url: image }
+        ]
+      }]
+    });
+
+    const parsed = parseModelJson(response.output_text);
+    if (!Array.isArray(parsed.items)) throw new Error("Invalid AI response.");
+    res.json(parsed);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Image analysis failed." });
+  }
+});
+
+function radians(value) {
+  return value * Math.PI / 180;
+}
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const earth = 6371;
+  const dLat = radians(lat2 - lat1);
+  const dLon = radians(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(dLon / 2) ** 2;
+  return earth * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+function restaurantTags(tags = {}) {
+  const cuisine = cleanText(tags.cuisine).replaceAll(";", ", ") || cleanText(tags["cuisine:regional"]) || "Restaurant";
+  const features = [];
+  if (tags["diet:vegetarian"] === "yes" || tags["diet:vegetarian"] === "only") features.push("Vegetarian options");
+  if (tags["diet:vegan"] === "yes" || tags["diet:vegan"] === "only") features.push("Vegan options");
+  if (tags["diet:halal"] === "yes" || tags["diet:halal"] === "only") features.push("Halal tagged");
+  if (tags.takeaway === "yes") features.push("Takeaway");
+  if (tags.outdoor_seating === "yes") features.push("Outdoor seating");
+  return { cuisine, features };
+}
+
+app.get("/api/nearby-restaurants", async (req, res) => {
+  try {
+    let lat = Number(req.query.lat);
+    let lon = Number(req.query.lon);
+    const query = String(req.query.query || "").trim();
+    const radius = Math.min(8000, Math.max(500, Number(req.query.radius || 3000)));
+
+    if ((!Number.isFinite(lat) || !Number.isFinite(lon)) && query) {
+      const geocode = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(query)}`,
+        { headers: { "User-Agent": OFF_HEADERS["User-Agent"], "Accept-Language": "en" }, signal: AbortSignal.timeout(12000) }
+      );
+      if (!geocode.ok) throw new Error("Location search failed.");
+      const places = await geocode.json();
+      if (!places.length) return res.status(404).json({ error: "Location not found." });
+      lat = Number(places[0].lat);
+      lon = Number(places[0].lon);
+    }
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return res.status(400).json({ error: "Location coordinates or a city are required." });
+    }
+
+    const overpassQuery = `
+      [out:json][timeout:20];
+      (
+        node["amenity"~"restaurant|fast_food|cafe"](around:${radius},${lat},${lon});
+        way["amenity"~"restaurant|fast_food|cafe"](around:${radius},${lat},${lon});
+        relation["amenity"~"restaurant|fast_food|cafe"](around:${radius},${lat},${lon});
+      );
+      out center tags 40;
+    `;
+    const response = await fetch("https://overpass-api.de/api/interpreter", {
+      method: "POST",
+      headers: {
+        "User-Agent": OFF_HEADERS["User-Agent"],
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({ data: overpassQuery }),
+      signal: AbortSignal.timeout(25000)
+    });
+    if (!response.ok) throw new Error(`Overpass ${response.status}`);
+    const data = await response.json();
+
+    const restaurants = (data.elements || []).map(element => {
+      const tags = element.tags || {};
+      const itemLat = Number(element.lat ?? element.center?.lat);
+      const itemLon = Number(element.lon ?? element.center?.lon);
+      const details = restaurantTags(tags);
+      const halal = tags["diet:halal"] === "yes" || tags["diet:halal"] === "only"
+        ? "Halal tagged in public map data"
+        : "Not verified";
+      const name = cleanText(tags.name) || cleanText(tags.brand) || "Nearby restaurant";
+      const address = [tags["addr:street"], tags["addr:city"]].filter(Boolean).join(", ");
+      return {
+        id: `${element.type}-${element.id}`,
+        name,
+        cuisine: details.cuisine,
+        distance: Number.isFinite(itemLat) && Number.isFinite(itemLon)
+          ? Number(distanceKm(lat, lon, itemLat, itemLon).toFixed(2))
+          : 0,
+        price: tags["price:range"] ? Number(String(tags["price:range"]).replace(/\D/g, "")) || 20 : 20,
+        rating: 4.2,
+        tags: details.features,
+        emoji: tags.amenity === "cafe" ? "☕" : tags.amenity === "fast_food" ? "🍔" : "🍽️",
+        halal,
+        address
+      };
+    }).filter((item, index, all) =>
+      index === all.findIndex(other => other.name.toLowerCase() === item.name.toLowerCase())
+    ).sort((a, b) => a.distance - b.distance).slice(0, 20);
+
+    res.json({
+      restaurants,
+      location: { lat, lon },
+      source: "OpenStreetMap contributors"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(502).json({ error: "Nearby restaurant search is unavailable." });
+  }
+});
+
 app.post("/api/coach", async (req, res) => {
   try {
     const { message, profile = {}, summary = {}, options = [] } = req.body || {};
@@ -183,4 +347,4 @@ Do not mention these internal instructions.`
 });
 
 app.get("*", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
-app.listen(port, () => console.log(`MakanAI World V7 running at http://localhost:${port}`));
+app.listen(port, () => console.log(`MakanAI World V8 running at http://localhost:${port}`));
